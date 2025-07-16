@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS reasons CASCADE;
 
 CREATE TABLE trainers (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL UNIQUE,
+  name VARCHAR(100) NOT NULL,
   description VARCHAR (2000) NOT NULL UNIQUE
 );
 
@@ -28,18 +28,18 @@ CREATE TABLE reasons (
   name VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE client_reasons (
-  id SERIAL PRIMARY KEY,
-  session_id INTEGER NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
-  reason_id INTEGER NOT NULL REFERENCES reasons(id) ON DELETE CASCADE
-);
-
 CREATE TABLE sessions (
   id SERIAL PRIMARY KEY,
   session_date DATE,
   session_time TIME,
   trainer_id INTEGER NOT NULL REFERENCES trainers(id) ON DELETE CASCADE,
   client_id INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE
+);
+
+CREATE TABLE client_reasons (
+  id SERIAL PRIMARY KEY,
+  session_id INTEGER NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
+  reason_id INTEGER NOT NULL REFERENCES reasons(id) ON DELETE CASCADE
 );
 
 DO $$
