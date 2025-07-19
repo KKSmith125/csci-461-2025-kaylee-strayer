@@ -1,30 +1,5 @@
 const pgClient = require('../config/pgClient');
 
-const validateTrainer = async (req, res, next) => {
-  const trainer = req.body;
-  trainer.id = req.params.id;
-  const errors = {};
-
-  if (!trainer.name || trainer.name.length === 0) {
-    errors.name = 'is required.';
-  }
-
-  if (!trainer.description || trainer.description.length === 0) {
-    errors.description = 'is required.';
-  }
-
-  if (trainer.description.length > 2000) {
-    errors.description = 'cannot be more than 2000 characters.';
-  }
-
-  if(Object.keys(errors).length > 0) {
-    res.status(422).json({errors});
-  }
-  else {
-    next();
-  }
-}
-
 const validateClient = async (req, res, next) => {
   const client = req.body;
   client.id = req.params.id;
