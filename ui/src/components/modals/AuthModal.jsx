@@ -1,0 +1,79 @@
+import {useState} from 'react';
+import {Modal, Form, Button} from 'react-bootstrap';
+import {useDispatch} from 'react-redux';
+import {authenticate, unauthenticate} from '../slices/authSlice';
+import axios from 'axios';
+
+function AuthModal({show, setShow, action}) {
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({email: '', password: ''});
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleSubmit (e) {
+    e.preventDefault();
+    
+    setIsLoading(true);
+
+    axios.post('/api/trainers/login', formData)
+      .then(response => {
+        dispatch(authenticate(response.data));
+        resetForm();
+        handleHide();
+      })
+      .catch(error => {
+        dispatch(unauthenticate());
+
+        const status = error.response?.status;
+        if (status === 422) {
+          setErrors(error.response.data.errors);
+        }
+        else if (status === 401) {
+          setErrors({email: 'invalid email or password.'});
+        }
+        else if (status === 404) {
+          setErrors({email: 'user not found.'});
+        }
+        else {
+          setErrors({email: 'an error occured :( Please try again later!'});
+        }
+      })
+      .finally(() => setIsLoading(false));
+  }
+
+  function handleHide (e) {
+    resetForm();
+    setShow(false);
+  }
+
+  function resetForm() {
+    setErrors({});
+    setFormData({email: '', password: ''});
+  }
+
+  return (
+    <Modal show={show} onHide={handleHide}>
+      <Modal.Header closeButton>
+        <Modal.Title>Log In</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit}>
+          <Form.Label>Email</Form.Label>
+          <Form.Control type='email' value={formData.email} isInvalid={!!errors.email} onChange={(e) => setFormData({...formData, email: e.target.value})}/>
+          <Form.Control.Feedback type='invalid'>{errors.email}</Form.Control.Feedback>
+          <Form.Label className='mt-3'>Password</Form.Label>
+          <Form.Control type='password' value={formData.password} isInvalid={!!errors.password} onChange={(e) => setFormData({...formData, password: e.target.value})}/>
+          <Form.Control.Feedback type='invalid'>{errors.password}</Form.Control.Feedback>
+        
+        <div className='mt-3 text-end'>
+          <Button type='submit' disabled={isLoading} className='me-2'>{isLoading ? 'Logging in...' : 'Log In'}</Button>
+          <Button variant='secondary' onClick={handleHide}>Cancel</Button>
+        </div>
+        </Form>
+      </Modal.Body>
+    </Modal>
+  );
+}
+
+export default AuthModal;

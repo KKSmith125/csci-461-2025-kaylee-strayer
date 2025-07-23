@@ -1,4 +1,4 @@
-import {authenticate, unauthenticate} from '../components/slices/authSlice';
+import {authenticate, unauthenticate} from '../components/slices/authSlice.js';
 import store from '../store.js';
 import axios from 'axios';
 

@@ -73,6 +73,21 @@ const validateSession = async (req, res, next) => {
     errors.reason_ids = 'at least one reason is required.'
   }
 
+  try {
+    const conflictQuery = 'SELECT id FROM sessions WHERE trainer_id = $1 AND session_date = $2 AND session_time = $3 AND id != COALESCE($4, 1)';
+    const conflictParams = [session.trainer_id, session.session_date, session.session_time, session.id || null];
+
+    const result = await pgClient.query(conflictQuery, conflictParams);
+    
+    if (result.rowCount > 0) {
+      errors.session_time = 'Another session has already taken that spot! Please choose another time :)';
+    }
+  }
+  catch (error) {
+    console.error('Session validation error: ', error);
+    res.status(500).json({error: 'Server error validating session.'});
+  }
+
   if(Object.keys(errors).length > 0) {
     res.status(422).json({errors});
   }
