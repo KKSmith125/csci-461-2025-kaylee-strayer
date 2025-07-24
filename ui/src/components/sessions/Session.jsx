@@ -3,14 +3,14 @@ import {Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 
 const Session = ({session, onCancelClick}) => {
-  const{user} = useSelector(state => state.auth);
-  const userId = user?.id;
+  const{trainer} = useSelector(state => state.auth);
+  const trainerId = trainer?.id;
 
   const reasonList = () => {
     return session.reasons.map((reason) => reason.name).join(', ');
   }
 
-  if (userId !== session.client?.id) return null;
+  if (trainerId !== session.trainer?.id) return null;
   
   return (
     <Col xs={12} md={6} lg={4} xl={3} className='mt-1 mb-3'>
