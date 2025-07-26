@@ -52,7 +52,6 @@ function ApplicationLayout() {
               <Nav.Link as={NavLink} to='/Nutrition'>General Nutrition</Nav.Link>
               <Nav.Link as={NavLink} to='/Weightlifting'>General Weightlifting</Nav.Link>
               <Nav.Link as={NavLink} to='/Cardio'>General Cardio</Nav.Link>
-              <Nav.Link as={NavLink} to='/About'>About Us</Nav.Link>
               {auth?.isAuthenticated ? <Nav.Link as={NavLink} to='/Sessions'>Sessions</Nav.Link> : <></>}
             </Nav>
             <Nav className='bg-secondary justify-content-end'>
