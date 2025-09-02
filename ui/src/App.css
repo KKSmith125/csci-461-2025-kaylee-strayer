@@ -36,3 +36,22 @@
   background-color: #824200;
   color: white;
 }
+
+.uniform-image {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.uniform-height {
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.uniform-height2 {
+  height: 500px;
+  object-fit: cover;
+  display: block;
+}

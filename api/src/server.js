@@ -5,6 +5,12 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const cookies = require('cookie-parser');
+app.use(cookies());
+
+const trainerRoutes = require('./routes/trainerRoutes');
+app.use('/api/trainers', trainerRoutes);
+
 const clientRoutes = require('./routes/clientRoutes');
 app.use('/api/clients', clientRoutes);
 

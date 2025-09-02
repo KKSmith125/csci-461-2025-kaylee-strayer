@@ -19,7 +19,7 @@ function EditSession() {
         setSession(results.data);
       })
       .catch(error => {
-        setAlert({message: 'Failed to load recipe.', variant: 'danger'});
+        setAlert({message: 'Failed to load session.', variant: 'danger'});
       })
       .finally(() => {
         setIsLoading(false);
@@ -37,4 +37,4 @@ function EditSession() {
   );
 }
 
-export default EditRecipe;
+export default EditSession;

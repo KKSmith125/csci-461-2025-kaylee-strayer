@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 import {authenticate, unauthenticate} from '../slices/authSlice';
 import axios from 'axios';
 
-function AuthModal({show, setShow, action}) {
+function AuthModal({show, setShow}) {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({email: '', password: ''});

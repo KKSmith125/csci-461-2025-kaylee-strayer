@@ -3,14 +3,14 @@ import {Container, Image} from 'react-bootstrap';
 function Cardio() {
   return (
     <>
-    <h1 className='text-center'>Cardio</h1>
+    <h1 className='display-4 text-center pb-2'>Cardio</h1>
     
-    <Container>
-      <Image src='https://www.discoveryvillages.com/wp-content/uploads/2024/10/A-group-of-seniors-in-gym-with.jpg' fluid/>
+    <Container className='text-center pt-4 pb-2' style={{height: '400px'}}>
+      <Image src='https://www.discoveryvillages.com/wp-content/uploads/2024/10/A-group-of-seniors-in-gym-with.jpg' className='h-100' fluid/>
     </Container>
 
     <Container className='justify-content-center'>
-      <h2>Overview</h2>
+      <h1 className='display-6 pt-4 pb-2'>Overview</h1>
       <p>
         In my experience as a college athlete and fitness nerd, I have encountered five different
         categories of cardio: endurance, sprint, high-intensity interval training,
@@ -18,7 +18,7 @@ function Cardio() {
         the benefits and other factors to help you decide which one(s) are best for you!
       </p>
 
-      <h4>Endurance</h4>
+      <h4 className='pt-4 pb-2'>Endurance</h4>
       <p>
         With endurance training, the main focus is to be able to do a certain activity for an increasingly
         long period of time and building your aerobic base (the foundation of cardio). This can be thought of as
@@ -31,7 +31,7 @@ function Cardio() {
         anxiety over speed and increase enjoyment!
       </p>
       
-      <h4>Sprint</h4>
+      <h4 className='pt-4 pb-2'>Sprint</h4>
       <p>
         With sprint training, the main focus is to increase speed over a relatively short distance.
         This can be thought of as the hare in the hare in the race against the tortoise. This could include 
@@ -43,7 +43,7 @@ function Cardio() {
         achieved and thus lend a helping hand in the race for speed!
       </p>
 
-      <h4>High-Intensity</h4>
+      <h4 className='pt-4 pb-2'>High-Intensity</h4>
       <p> 
         High-intensity interval training is an increasing hot topic in the world of fitness and cardio. This form 
         of training has the athlete work in a high heart rate range for a shorter period of time with rest breaks in
@@ -53,7 +53,7 @@ function Cardio() {
         Tip: Jumping rope, Fartlek runs, and some forms of sprint repetitions are all great options for HIIT (high-intensity interval training)!
       </p>
 
-      <h4>Low-Intensity</h4>
+      <h4 className='pt-4 pb-2'>Low-Intensity</h4>
       <p>
         Unlike high-intensity interal training, low intensity interval training aims to have the athlete work in a relatively 
         low heart rate for an extended period of time. Benefits of this include lowering the physical strain on the body, less
@@ -64,8 +64,7 @@ function Cardio() {
         as biking!
       </p>
 
-      <h4>Sport-Specific</h4>
-
+      <h4 className='pt-4 pb-2'>Sport-Specific</h4>
       <p>
         As I'm sure most sport athletes will attest to sport-specific training deserves a category all its own. Each sport has curated different 
         forms of cardio that help the athlete prepare for their sport-specific needs. For instance, soccer has come up with workouts like 5000s,
@@ -75,7 +74,7 @@ function Cardio() {
         can definitely help prepare an athlete for the strains of their respective sport!
       </p>
 
-      <h4>Wrap-Up</h4>
+      <h4 className='pt-4 pb-2'>Wrap-Up</h4>
       <p>
         I hope these little exerpts were helpful to you in your quest for fitness knowledge! For more specialized and in-depth information feel free 
         to schedule a free consultation with one of our amazing trainers in the Scheduling tab!
@@ -84,3 +83,5 @@ function Cardio() {
     </>
   )
 }
+
+export default Cardio;

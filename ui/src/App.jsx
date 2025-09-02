@@ -12,7 +12,7 @@ import ApplicationLayout from './components/layouts/ApplicationLayout';
 import AuthenticatedLayout from './components/layouts/AuthenticatedLayout';
 import Unauthenticated from './components/Unauthenticated';
 import Cardio from './components/Cardio';
-import AboutUs from './components/AboutUs';
+import TrainerTrove from './components/TrainerTrove';
 import Nutrition from './components/Nutrition';
 import WeightLifting from './components/Weightlifting';
 import Scheduling from './components/Scheduling';
@@ -27,13 +27,14 @@ function App() {
         <Route path='/unauthenticated' element={<Unauthenticated />}/>
         <Route path='/WeightLifting' element={<WeightLifting />} />
         <Route path='/Cardio' element={<Cardio />}/>
-        <Route path='/AboutUs' element={<AboutUs />}/>
+        <Route path='/TrainerTrove' element={<TrainerTrove />}/>
         <Route path='/Nutrition' element={<Nutrition />}/>
         <Route path='/sessions/new' element={<NewSession />}/>
         <Route path='/sessions/:id/edit' element={<EditSession />}/>
         <Route path='/clients/new' element={<NewClient />}/>
         <Route path='/clients/:id/edit' element={<EditClient />}/>
         <Route path='/Scheduling' element={<Scheduling />}></Route>
+        <Route path='/TrainerTrove' element={<TrainerTrove />}></Route>
       
 
         <Route element={<AuthenticatedLayout />}>
