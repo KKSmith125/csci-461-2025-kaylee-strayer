@@ -9,7 +9,7 @@ const SessionForm = ({session}) => {
   const [alert, setAlert] = useState({message: '', variant: ''});
   const [errors, setErrors] = useState({});
   const [clients, setClients] = useState([]);
-  const [trainers, setTrainers] = useState('');
+  const [trainers, setTrainers] = useState([]);
   const [reasons, setReasons] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);

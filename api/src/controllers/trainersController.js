@@ -65,6 +65,15 @@ function generateToken(attributes) {
   return jwt.sign(attributes, process.env.JWT_SECRET, {expiresIn: '2 days'});
 }
 
+function verifyToken(req, res) {
+  if (res.locals.user !== undefined) {
+    res.json({message: 'Token is valid', user: res.locals.user});
+  }
+  else {
+    res.status(401).json({error: 'No one is logged in.'});
+  }
+}
+
 const index = (req, res) => {
   pgClient.query('SELECT id, name, description, email, password FROM trainers ORDER BY name ASC')
     .then(results => {
@@ -76,6 +85,7 @@ const index = (req, res) => {
 }
 
 module.exports = {
+  verifyToken,
   index,
   login,
   logout

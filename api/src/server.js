@@ -5,6 +5,9 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const cors = require('cors');
+app.use(cors());
+
 const cookies = require('cookie-parser');
 app.use(cookies());
 
@@ -16,9 +19,6 @@ app.use('/api/clients', clientRoutes);
 
 const reasonRoutes = require('./routes/reasonRoutes');
 app.use('/api/reasons', reasonRoutes);
-
-const trainerRoutes = require('./routes/trainerRoutes');
-app.use('/api/trainers', trainerRoutes);
 
 const sessionRoutes = require('./routes/sessionRoutes');
 app.use('/api/sessions', sessionRoutes);

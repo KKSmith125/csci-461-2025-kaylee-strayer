@@ -65,8 +65,7 @@ DO $$
   first_session_id INT;
 
   BEGIN
-    INSERT INTO trainers(name, description, is_admin, email, password) VALUES ('Kaylee Strayer', 'A dedicated trainer who has spent years refining expertise in areas such as weight management, muscle building, nutrition and soccer. Takes a tailored approach with each client, involving them in the decision-making process from the very beginning.', TRUE, 'kayleestrayer@outlook.com', 'bigGainz26') RETURNING id INTO kaylee_trainer_id;
-    INSERT INTO trainers(name, description) VALUES ('Cameron Malone', 'A trainer drawn to athletics from a young age and continues to stay fit through firefighting and weightlifting. He specializes in giving the client a plan that will help them reach their performance goals.', TRUE, 'cameronmalone@outlook.com', 'fireLifts15') RETURNING id INTO cameron_trainer_id;
+    INSERT INTO trainers(name, description, email, password) VALUES ('Kaylee Strayer', 'A dedicated trainer who has spent years refining expertise in areas such as weight management, muscle building, nutrition and soccer. Takes a tailored approach with each client, involving them in the decision-making process from the very beginning.', 'kayleestrayer@outlook.com', 'bigGainz26') RETURNING id INTO kaylee_trainer_id;
 
     INSERT INTO clients(name, weight, height_ft, height_in) VALUES ('Michael DeSanty', 200, 5, 11) RETURNING id INTO michael_client_id;
     

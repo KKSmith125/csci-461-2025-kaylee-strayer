@@ -30,15 +30,14 @@ function App() {
         <Route path='/TrainerTrove' element={<TrainerTrove />}/>
         <Route path='/Nutrition' element={<Nutrition />}/>
         <Route path='/sessions/new' element={<NewSession />}/>
-        <Route path='/sessions/:id/edit' element={<EditSession />}/>
         <Route path='/clients/new' element={<NewClient />}/>
         <Route path='/clients/:id/edit' element={<EditClient />}/>
         <Route path='/Scheduling' element={<Scheduling />}></Route>
-        <Route path='/TrainerTrove' element={<TrainerTrove />}></Route>
       
 
         <Route element={<AuthenticatedLayout />}>
           <Route path='/sessions' element={<Sessions />}/>
+          <Route path='/sessions/:id/edit' element={<EditSession />}/>
         </Route>
 
       </Route>
