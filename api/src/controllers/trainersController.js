@@ -1,5 +1,4 @@
 const pgClient = require('../config/pgClient');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 function login(req, res) {
@@ -19,32 +18,27 @@ function login(req, res) {
     return;
   }
 
-  pgClient.query('SELECT id, name, description, email, password FROM trainers WHERE email = $1', [email])
+  pgClient.query('SELECT id, name, description, email, password FROM trainers WHERE email = $1 AND password = crypt($2, password)', [email, password])
     .then(results => {
       if(results.rowCount > 0) {
-        if(bcrypt.compareSync(password, results.rows[0].password)) {
-          const token = generateToken({id: results.rows[0].id});
-          const payload = {
-            id: results.rows[0].id,
-            name: results.rows[0].name,
-            description: results.rows[0].name,
-            email: results.rows[0].email,
-            token: token
-          };
+        const token = generateToken({id: results.rows[0].id});
+        const payload = {
+          id: results.rows[0].id,
+          name: results.rows[0].name,
+          description: results.rows[0].description,
+          email: results.rows[0].email,
+          token: token
+        };
 
-          res.cookie('jwt', token, {
-            maxAge: 1000000,
-            httpOnly: true
-          });
+        res.cookie('jwt', token, {
+          maxAge: 1000000,
+          httpOnly: true
+        });
 
-          res.json(payload);
-        }
-        else {
-          res.status(401).json({error: 'Invalid email or password.'});
-        }
+        res.json(payload);
       }
       else {
-        res.status(404).json({error: 'User not found.'});
+        res.status(401).json({error: 'Invalid email or password.'});
       }
     })
     .catch(error => {
@@ -53,12 +47,8 @@ function login(req, res) {
 }
 
 function logout(req, res) {
-  if (res.locals.user !== undefined) {
-    res.json({message: 'Token is valid', user: res.locals.user});
-  }
-  else {
-    res.status(401).json({error: 'No one is logged in.'});
-  }
+  res.clearCookie('jwt');
+  res.json({message: 'Loggied out successfully.'});
 }
 
 function generateToken(attributes) {
@@ -73,7 +63,6 @@ function verifyToken(req, res) {
     res.status(401).json({error: 'No one is logged in.'});
   }
 }
-
 const index = (req, res) => {
   pgClient.query('SELECT id, name, description, email, password FROM trainers ORDER BY name ASC')
     .then(results => {

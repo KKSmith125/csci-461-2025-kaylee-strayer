@@ -52,9 +52,8 @@ const Sessions = () => {
         <Alert key={index} variant={alert.variant} dismissible>{alert.message}</Alert>
       ))}
 
-      <h3 className='pe-3'>Sessions</h3>
+      <h3 className='pe-3 pb-3 text-center'>Sessions</h3>
 
-      <Button as={Link} to='/sessions/new' variant='primary' className='mb-3 btn-action'>Schedule Session</Button>
       {isLoading ? 
       <div className='d-flex justify-content-center'><Spinner animation='border'></Spinner></div>
       : 

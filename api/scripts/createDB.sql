@@ -1,5 +1,12 @@
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE datname = 'session_db'
+  AND pid <> pg_backend_pid();
+
 DROP DATABASE IF EXISTS session_db;
 CREATE DATABASE session_db;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 \c session_db
 
@@ -65,7 +72,7 @@ DO $$
   first_session_id INT;
 
   BEGIN
-    INSERT INTO trainers(name, description, email, password) VALUES ('Kaylee Strayer', 'A dedicated trainer who has spent years refining expertise in areas such as weight management, muscle building, nutrition and soccer. Takes a tailored approach with each client, involving them in the decision-making process from the very beginning.', 'kayleestrayer@outlook.com', 'bigGainz26') RETURNING id INTO kaylee_trainer_id;
+    INSERT INTO trainers(name, description, email, password) VALUES ('Kaylee Strayer', 'A dedicated trainer who has spent years refining expertise in areas such as weight management, muscle building, nutrition and soccer. Takes a tailored approach with each client, involving them in the decision-making process from the very beginning.', 'kayleestrayer@outlook.com', crypt('bigGainz26', 'fixedsaltvalue')) RETURNING id INTO kaylee_trainer_id;
 
     INSERT INTO clients(name, weight, height_ft, height_in) VALUES ('Michael DeSanty', 200, 5, 11) RETURNING id INTO michael_client_id;
     

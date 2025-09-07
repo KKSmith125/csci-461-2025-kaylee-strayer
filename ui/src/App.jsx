@@ -9,7 +9,6 @@ import NewClient from './components/clients/NewClient';
 import EditClient from './components/clients/EditClient';
 import NotFound from './components/NotFound';
 import ApplicationLayout from './components/layouts/ApplicationLayout';
-import AuthenticatedLayout from './components/layouts/AuthenticatedLayout';
 import Unauthenticated from './components/Unauthenticated';
 import Cardio from './components/Cardio';
 import TrainerTrove from './components/TrainerTrove';
@@ -33,13 +32,8 @@ function App() {
         <Route path='/clients/new' element={<NewClient />}/>
         <Route path='/clients/:id/edit' element={<EditClient />}/>
         <Route path='/Scheduling' element={<Scheduling />}></Route>
-      
-
-        <Route element={<AuthenticatedLayout />}>
-          <Route path='/sessions' element={<Sessions />}/>
-          <Route path='/sessions/:id/edit' element={<EditSession />}/>
-        </Route>
-
+        <Route path='/sessions' element={<Sessions />}/>
+        <Route path='/sessions/:id/edit' element={<EditSession />}/>
       </Route>
 
       <Route path='*' element={<NotFound />}/>
