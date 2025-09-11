@@ -27,15 +27,15 @@ const validateClient = async (req, res, next) => {
     errors.name = 'already taken.';
   }
 
-  if (!Number.isInteger(weight)) {
+  if (!Number.isInteger(parseInt(weight))) {
     errors.weight = 'must be an integer.'
   }
 
-  if (!Number.isInteger(height_ft)) {
+  if (!Number.isInteger(parseInt(height_ft))) {
     errors.height_ft = 'must be an integer.'
   }
 
-  if (!Number.isInteger(height_in)) {
+  if (!Number.isInteger(parseInt(height_in))) {
     errors.height_in = 'must be an integer.'
   }
 

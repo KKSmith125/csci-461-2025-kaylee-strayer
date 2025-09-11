@@ -24,7 +24,7 @@ const ClientForm = ({client}) => {
   
     apiCall
       .then(response => {
-        navigate('/clients', {state: {alert: {message: 'Client saved successfully!', variant: 'success'}}});
+        navigate('/Scheduling', {state: {alert: {message: 'Client saved successfully!', variant: 'success'}}});
       })
       .catch ((error) => {
         if (error.response.status === 422) {
