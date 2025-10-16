@@ -1,5 +1,33 @@
 const pgClient = require('../config/pgClient');
 const jwt = require('jsonwebtoken');
+const {verifyGoogleToken} = require('../middleware/googleAuth');
+
+async function googleLogin(req, res) {
+  const {idToken} = req.body;
+  if (!idToken) {
+    return res.status(422).json({error: 'ID token is required'});
+  }
+
+  try {
+    const googleUser = await verifyGoogleToken(idToken);
+    const results = await pgClient.query('SELECT id, name, description, email FROM trainers WHERE email = $1', [googleUser.email])
+    let user;
+
+    if (results.rowCount > 0) {
+      user = results.rows[0];
+      const token = generateToken({id: user.id});
+      res.cookie('jwt', token, {maxAge:1000000, httpOnly: true});
+      res.json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        token
+      });
+    }
+  } catch (err) {
+    res.status(401).json({error: 'User not found'});
+  }
+}
 
 function login(req, res) {
   const {email, password} = req.body;
@@ -76,6 +104,7 @@ const index = (req, res) => {
 module.exports = {
   verifyToken,
   index,
+  googleLogin,
   login,
   logout
 };

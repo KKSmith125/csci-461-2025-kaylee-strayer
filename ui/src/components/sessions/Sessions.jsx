@@ -1,6 +1,6 @@
-import {Link, useLocation} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {Container, Row, Button, Spinner, Alert} from 'react-bootstrap';
+import {Container, Row, Spinner, Alert} from 'react-bootstrap';
 import axios from 'axios';
 
 import Session from './Session';

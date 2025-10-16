@@ -42,6 +42,27 @@ function AuthModal({show, setShow}) {
       .finally(() => setIsLoading(false));
   }
 
+  async function handleGoogleLogin() {
+    try {
+      const client = window.google.accounts.oauth2.initTokenClient({
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        scope: 'email profile openid',
+        callback: async (response) => {
+          const idToken = response.access_token;
+          const res = await axios.post('/api/trainers/google-login', {idToken});
+          dispatch.authenticate(res.data);
+          resetForm();
+          handleHide();
+        }
+      });
+
+      client.requestAccessToken();
+    } catch (error) {
+      console.error('Google login failed: ', error.response?.data || error.message);
+      dispatch(unauthenticate());
+    }
+  }
+  
   function handleHide (e) {
     resetForm();
     setShow(false);
@@ -69,7 +90,9 @@ function AuthModal({show, setShow}) {
         <div className='mt-3 text-end'>
           <Button type='submit' disabled={isLoading} className='me-2'>{isLoading ? 'Logging in...' : 'Log In'}</Button>
           <Button variant='secondary' onClick={handleHide}>Cancel</Button>
+          <Button variant='danger' onClick={handleGoogleLogin}>Google Sign In</Button>
         </div>
+
         </Form>
       </Modal.Body>
     </Modal>

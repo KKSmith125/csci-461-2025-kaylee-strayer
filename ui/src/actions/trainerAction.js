@@ -2,6 +2,17 @@ import {authenticate, unauthenticate} from '../components/slices/authSlice.js';
 import store from '../store.js';
 import axios from 'axios';
 
+const googleLogin = async (idToken) => {
+  try {
+    const response = await axios.post('/api/trainers/google-login', {idToken});
+    store.dispatch(authenticate(response.data));
+    console.log('Google login successful: ', response.data);
+  } catch (error) {
+    console.error('Google login failed: ', error.response?.data || error.message);
+    store.dispatch(unauthenticate());
+  }
+}
+
 const verifyToken = () => {
   console.log('Verifying token...');
 
@@ -17,4 +28,4 @@ const verifyToken = () => {
     });
 }
 
-export {verifyToken};
+export {googleLogin, verifyToken};
