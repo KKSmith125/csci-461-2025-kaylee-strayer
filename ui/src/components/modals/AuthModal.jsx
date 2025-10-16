@@ -44,25 +44,24 @@ function AuthModal({show, setShow}) {
 
   async function handleGoogleLogin() {
     try {
-      const client = window.google.accounts.oauth2.initTokenClient({
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        scope: 'email profile openid',
+      window.google.accounts.id.initialize({
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         callback: async (response) => {
-          const idToken = response.access_token;
+          const idToken = response.credential;
           const res = await axios.post('/api/trainers/google-login', {idToken});
-          dispatch.authenticate(res.data);
+          dispatch(authenticate(res.data));
           resetForm();
           handleHide();
         }
       });
 
-      client.requestAccessToken();
+      window.google.accounts.id.prompt();
     } catch (error) {
       console.error('Google login failed: ', error.response?.data || error.message);
       dispatch(unauthenticate());
     }
   }
-  
+
   function handleHide (e) {
     resetForm();
     setShow(false);
