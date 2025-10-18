@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Modal, Form, Button} from 'react-bootstrap';
 import {useDispatch} from 'react-redux';
 import {authenticate, unauthenticate} from '../slices/authSlice';
@@ -10,6 +10,22 @@ function AuthModal({show, setShow}) {
   const [formData, setFormData] = useState({email: '', password: ''});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const checkGoogle = setInterval(() => {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        
+        window.google.accounts.id.initialize({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          callback: handleGoogleCallback
+        });
+
+      clearInterval(checkGoogle);
+    }
+  }, 300);
+
+    return () => clearInterval(checkGoogle);
+  }, []);
 
   function handleSubmit (e) {
     e.preventDefault();
@@ -42,20 +58,21 @@ function AuthModal({show, setShow}) {
       .finally(() => setIsLoading(false));
   }
 
-  async function handleGoogleLogin() {
+  function handleGoogleLogin() {
+    if (window.google && window.google.accounts?.id) {
+      window.google.accounts.id.prompt();
+    } else {
+      console.error('Google Identity script not ready yet.');
+    }
+  }
+
+  async function handleGoogleCallback(response) {
     try {
-      window.google.accounts.id.initialize({
-        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-        callback: async (response) => {
           const idToken = response.credential;
           const res = await axios.post('/api/trainers/google-login', {idToken});
           dispatch(authenticate(res.data));
           resetForm();
           handleHide();
-        }
-      });
-
-      window.google.accounts.id.prompt();
     } catch (error) {
       console.error('Google login failed: ', error.response?.data || error.message);
       dispatch(unauthenticate());
@@ -88,7 +105,7 @@ function AuthModal({show, setShow}) {
         
         <div className='mt-3 text-end'>
           <Button type='submit' disabled={isLoading} className='me-2'>{isLoading ? 'Logging in...' : 'Log In'}</Button>
-          <Button variant='secondary' onClick={handleHide}>Cancel</Button>
+          <Button variant='secondary' className='me-2' onClick={handleHide}>Cancel</Button>
           <Button variant='danger' onClick={handleGoogleLogin}>Google Sign In</Button>
         </div>
 
