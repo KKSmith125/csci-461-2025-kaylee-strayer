@@ -3,29 +3,27 @@ const jwt = require('jsonwebtoken');
 const {verifyGoogleToken} = require('../middleware/googleAuth');
 
 async function googleLogin(req, res) {
-  const {idToken} = req.body;
+  const idToken = req.body.credential;
+
   if (!idToken) {
-    return res.status(422).json({error: 'ID token is required'});
+    return res.redirect('http://localhost:3000?error=notoken');
   }
 
   try {
     const googleUser = await verifyGoogleToken(idToken);
-    const results = await pgClient.query('SELECT id, name, description, email FROM trainers WHERE email = $1', [googleUser.email])
-    let user;
+    const userQuery = await pgClient.query('SELECT id, name, email FROM trainers WHERE email = $1', [googleUser.email]);
 
-    if (results.rowCount > 0) {
-      user = results.rows[0];
-      const token = generateToken({id: user.id});
-      res.cookie('jwt', token, {maxAge:1000000, httpOnly: true});
-      res.json({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        token
-      });
+    if (userQuery.rowCount === 0) {
+      return res.redirect('http://localhost:3000?error=notfound');
     }
+
+    const currentUser = userQuery.rows[0];
+    const token = jwt.sign({id: currentUser.id}, process.env.JWT_SECRET, {expiresIn: '2d'});
+    res.cookie('jwt', token, {httpOnly: true, sameSite: 'Lax', secure: false});
+    res.redirect('http://localhost:3000');
   } catch (err) {
-    res.status(401).json({error: 'User not found'});
+    console.error(err);
+    res.redirect('http://localhost:3000?error=google');
   }
 }
 
@@ -76,7 +74,7 @@ function login(req, res) {
 
 function logout(req, res) {
   res.clearCookie('jwt');
-  res.json({message: 'Loggied out successfully.'});
+  res.json({message: 'Logged out successfully.'});
 }
 
 function generateToken(attributes) {

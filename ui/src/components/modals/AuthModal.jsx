@@ -4,35 +4,54 @@ import {useDispatch} from 'react-redux';
 import {authenticate, unauthenticate} from '../slices/authSlice';
 import axios from 'axios';
 
-function AuthModal({show, setShow}) {
+function AuthModal({show, setShow, authAction, setAuthAction}) {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({email: '', password: ''});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
+  
   useEffect(() => {
-    const checkGoogle = setInterval(() => {
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        
+    if (!show) return;
+
+    const interval = setInterval(() => {
+      const parent = document.getElementById('google-signin');
+      if (parent && window.google?.accounts?.id) {
         window.google.accounts.id.initialize({
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
           callback: handleGoogleCallback
         });
 
-      clearInterval(checkGoogle);
-    }
-  }, 300);
+        window.google.accounts.id.renderButton(
+          document.getElementById('google-signin'),
+          {theme: 'outline', size: 'large', width: '225'}
+        );
 
-    return () => clearInterval(checkGoogle);
-  }, []);
+        clearInterval(interval);
+      }
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, [show]);
+
+  function handleGoogleCallback(response) {
+    axios.post('/api/trainers/google-login', {credential: response.credential}, {withCredentials: true})
+      .then(res => {
+        dispatch(authenticate(res.data.user));
+        resetForm();
+        setShow(false);
+      })
+      .catch(err => {
+        console.error(err);
+        dispatch(unauthenticate());
+      })
+  }
 
   function handleSubmit (e) {
     e.preventDefault();
-    
     setIsLoading(true);
 
-    axios.post('/api/trainers/login', formData)
+    axios.post('/api/trainers/login', formData,{withCredentials: true})
       .then(response => {
         dispatch(authenticate(response.data));
         resetForm();
@@ -58,30 +77,10 @@ function AuthModal({show, setShow}) {
       .finally(() => setIsLoading(false));
   }
 
-  function handleGoogleLogin() {
-    if (window.google && window.google.accounts?.id) {
-      window.google.accounts.id.prompt();
-    } else {
-      console.error('Google Identity script not ready yet.');
-    }
-  }
-
-  async function handleGoogleCallback(response) {
-    try {
-          const idToken = response.credential;
-          const res = await axios.post('/api/trainers/google-login', {idToken});
-          dispatch(authenticate(res.data));
-          resetForm();
-          handleHide();
-    } catch (error) {
-      console.error('Google login failed: ', error.response?.data || error.message);
-      dispatch(unauthenticate());
-    }
-  }
-
   function handleHide (e) {
     resetForm();
     setShow(false);
+    setAuthAction('');
   }
 
   function resetForm() {
@@ -106,9 +105,9 @@ function AuthModal({show, setShow}) {
         <div className='mt-3 text-end'>
           <Button type='submit' disabled={isLoading} className='me-2'>{isLoading ? 'Logging in...' : 'Log In'}</Button>
           <Button variant='secondary' className='me-2' onClick={handleHide}>Cancel</Button>
-          <Button variant='danger' onClick={handleGoogleLogin}>Google Sign In</Button>
         </div>
 
+        {authAction === 'login' && <div id='google-signin' className='mt-3'></div>}
         </Form>
       </Modal.Body>
     </Modal>

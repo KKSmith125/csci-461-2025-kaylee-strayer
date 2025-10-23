@@ -5,19 +5,28 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import axios from 'axios';
 import AuthModal from '../modals/AuthModal';
-import {unauthenticate} from '../slices/authSlice';
-import {verifyToken} from '../../actions/trainerAction';
+import {unauthenticate, authenticate} from '../slices/authSlice';
 
-function ApplicationLayout() {
+function ApplicationLayout({}) {
   const location = useLocation();
   const dispatch = useDispatch();
-
   const auth = useSelector(state => state.auth);
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [authAction, setAuthAction] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        const res = await axios.get('/api/trainers/verifyToken', {withCredentials: true});
+        dispatch(authenticate(res.data.user));
+      } catch (error) {
+        dispatch(unauthenticate());
+      }
+    };
 
-  useEffect(() => {verifyToken();}, [location.pathname]);
-
+    verifyUser();
+  }, [dispatch, location.pathname]);
+  
   function handleLoginClick() {
     setAuthAction('login');
     setShowAuthModal(true);
@@ -25,14 +34,17 @@ function ApplicationLayout() {
   }
 
   function handleLogoutClick() {
-    axios.post('/api/trainers/logout')
+    setAuthAction('logout');
+    axios.post('/api/trainers/logout', {}, {withCredentials: true})
       .then(response => {
         console.log(response.data);
         dispatch(unauthenticate());
+        setAuthAction('');
       })
       .catch(error => {
         console.error(error);
         dispatch(unauthenticate());
+        setAuthAction('');
       });
 
     console.log('Logging out...');
@@ -68,7 +80,7 @@ function ApplicationLayout() {
         <Outlet />
       </div>
 
-      <AuthModal show={showAuthModal} action={authAction} setShow={setShowAuthModal}/>
+      <AuthModal show={showAuthModal} setShow={setShowAuthModal} authAction={authAction} setAuthAction={setAuthAction}/>
     </Container>
   );
 }
