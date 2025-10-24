@@ -16,6 +16,8 @@ const Sessions = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [view, setView] = useState('month');
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     axios.get('/api/sessions')
@@ -44,13 +46,14 @@ const Sessions = () => {
   }
 
   const getStartEndDates = (session) => {
-    const [hours, minutes] = session.session_time.split(':').map(Number);
-    const [year, month, day] = session.session_date.split('-').map(Number);
+    const [hours, minutes, seconds] = session.session_time.split(':').map(Number);
 
-    const start = new Date(year, month - 1, day, hours, minutes);
+    const start = moment(session.session_date, 'YYYY-MM-DD')
+      .set({hour: hours, minute: minutes, second: seconds || 0})
+      .toDate();
 
-    const end = new Date(start.getTime() + 60 * 60 * 1000);
-    
+    const end = moment(start).add(1, 'hour').toDate();
+
     return {start, end};
   }
 
@@ -96,7 +99,18 @@ const Sessions = () => {
         {sessions.length === 0 ?
           <p>No sessions found.</p>
           :
-          <Calendar localizer={localizer} events={events} startAccessor='start' endAccessor='end' style={{height:600}} onSelectEvent={handleEventClick}/>
+          <Calendar 
+            localizer={localizer}
+            events={events}
+            startAccessor='start'
+            endAccessor='end'
+            style={{height:600}}
+            onSelectEvent={handleEventClick}
+            view={view}
+            date={date}
+            onView={(newView) => setView(newView)}
+            onNavigate={(newDate) => setDate(newDate)}
+          />
         }
       </>}
 

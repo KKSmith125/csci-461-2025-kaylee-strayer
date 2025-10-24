@@ -4,20 +4,12 @@ import {Link} from 'react-router-dom';
 
 function Scheduling () {
   return (
-    <>
-      <div className='text-center'>
-        <Link to='/sessions/new'>
-          <Button className='m-2' variant='success' size='lg'>Schedule a Session!</Button>
-        </Link>
-        <Link to='/clients/new'>
-          <Button className='m-2' variant='success' size='lg'>Sign Up As A Client!</Button>
-        </Link>
-      </div>
-      
-      <h1 className='display-6 text-center pt-4 pb-2'>Session Information</h1>
+    <>      
+      <h1 className='display-6 text-center pt-4 pb-2'>Session Information</h1><br></br>
+
       <h5>General</h5>
       <p>
-        When scheduling a first-time consult session (which is free) using our forms above,
+        When scheduling a first-time consult session (which is free) using our forms below,
         the client will be asked to provide standard information about themselves such as height, weight,
         and age so that the selected trainer will be able to have some information to go off of
         when doing research and work prior to the consult. Once this information has been provided, the new client
@@ -66,7 +58,16 @@ function Scheduling () {
       <p>
         We aim to be affordable while also supplying our trainers with what they need. If you 
         find a more competitive rate please let us know!
-      </p>
+      </p><br></br>
+
+      <div className='text-center'>
+        <Link to='/sessions/new'>
+          <Button className='m-2' variant='dark' size='lg'>Schedule a Session!</Button>
+        </Link>
+        <Link to='/clients/new'>
+          <Button className='m-2' variant='dark' size='lg'>Sign Up As A Client!</Button>
+        </Link>
+      </div>
     </>
   );
 }

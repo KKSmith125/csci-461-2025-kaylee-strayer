@@ -1,13 +1,20 @@
-import {Container, Image} from 'react-bootstrap';
+import {Container, Row, Col, Image} from 'react-bootstrap';
 
 function Cardio() {
   return (
     <>
-    <h1 className='display-4 text-center pb-2'>Cardio</h1>
+    <h1 className='display-4 text-center pb-2'>Cardio</h1> <br></br>
     
-    <Container className='text-center pt-4 pb-2' style={{height: '400px'}}>
-      <Image src='https://www.discoveryvillages.com/wp-content/uploads/2024/10/A-group-of-seniors-in-gym-with.jpg' className='h-100' fluid/>
-    </Container>
+    <Container className='d-flex justify-content-center align-items-center p-0 m-0' fluid>
+        <Row className='g-0'>
+          <Col>
+            <Image src='https://www.discoveryvillages.com/wp-content/uploads/2024/10/A-group-of-seniors-in-gym-with.jpg' className='uniform-height' fluid/>
+          </Col>
+          <Col>
+            <Image src='https://marathonhandbook.com/wp-content/uploads/Bodyweight-Cardio-Exercises-7.jpg' className='uniform-height' fluid/>
+          </Col>
+        </Row>
+      </Container> <br></br>
 
     <Container className='justify-content-center'>
       <h1 className='display-6 pt-4 pb-2'>Overview</h1>

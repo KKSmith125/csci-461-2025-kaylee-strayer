@@ -5,9 +5,9 @@ import '../App.css';
 function Weightlifting() {
  return (
   <>
-      <h1 className='display-4 text-center pb-2'>Nutrition</h1>
+      <h1 className='display-4 text-center pb-2'>Weightlifting</h1>
 
-      <Container className='d-flex justify-content-center align-items-center p-0' fluid>
+      <Container className='d-flex justify-content-center align-items-center p-0 m-0' fluid>
         <Row className='g-0'>
           <Col>
             <Image src='https://gymvmt.com/wp-content/uploads/2023/04/no_promises.jpg' className='uniform-height' fluid/>

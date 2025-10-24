@@ -51,9 +51,9 @@ function ApplicationLayout({}) {
   }
 
   return (
-    <Container fluid id='container' className='min-vh-100 d-flex flex-column'>
+    <Container fluid id='container' className='min-vh-100 d-flex flex-column px-0'>
       <div id='header'>
-        <div className='py-5 px-3 bg-light text-center'>
+        <div className='py-5 px-3 bg-light text-center' style={{height: '150px'}}>
           <h1>Strayer Fitness: Reimagining Health & Wellness</h1>
         </div>
         <Navbar className='justify-content-between bg-secondary'>
