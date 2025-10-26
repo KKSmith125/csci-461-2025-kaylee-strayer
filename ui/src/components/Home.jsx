@@ -7,6 +7,16 @@ import '../App.css';
 function Home() {
   return (
     <>
+    {/*Hero Banner*/}
+    <section className='hero-section text-white text-center d-flex align-items-center justify-content-center'>
+      <div className='overlay'>
+        <div className='hero-content'>
+          <h1 className='display-3 fw-bold mb-3'>Build Strength. Gain Confidence. Love the Process.</h1>
+          <p>Personal training designed to help you thrive - physically and mentally.</p>
+        </div>
+      </div>
+    </section>
+
     {/*Images of personal training experience*/}
       <Container className='p-0' fluid>
         <Row className='g-0'>
@@ -25,26 +35,51 @@ function Home() {
         </Row>
       </Container>
 
-    {/*Hook and Introductions*/}
+    {/*About*/}
    
-    <h1 className='display-3 text-center pt-4'>Looking to build a strong fitness journey and have tons of fun along the way?</h1>
-    
-    <h1 className='display-6 pt-4 pb-2'>Background & Mission</h1>
-    <p>
-      As a soccer player since age three and an avid fitness enthusiast, founder Kaylee Strayer wanted to create a
-      company that provided a format to express her passion and knowledge of the fitness industry in a way that bettered 
-      the health of others. Knowing all too well the challenges of keeping up a healthy mindset while also keeping a healthy
-      body, she aims to share the wealth of knowledge she has aquired over her more than 18 years of experience with everyone 
-      who wants to start their fitness journey and enjoy the process. Our team of experience trainers exude excitement and passion 
-      and love to have a good time with their clients while making sure they are providing the best tips and tricks for the betterment 
-      of the client. If this sounds like something you are interested in or have any questions for the team, please contact us either
-      through our contact information below or through our scheduling portal! We look forward to hearing from you! There are also some
-      tips and tricks in our other sections that are offered free of charge as part of our committment to making fitness
-      available to everyone, feel free to have a look around!
-    </p>
-    <h1 className='display-6 pt-4 pb-2'>Contact</h1>
-    <p>Email: strayerFitness@outlook.com</p>
-    <p>Phone Number: 614-603-1543</p>
+    <Container fluid className='hero-section py-5'>
+      <h2 className='text-white text-center mb-4 fw-bold'>About Strayer Fitness</h2>
+      <p className='text-white text-center lead mb-5'>
+        Empowering clients to move better, feel stronger, and enjoy every step of their fitness journey.
+      </p>
+
+      <Row className='text-white align-items-center'>
+        <Col md={6}>
+          <Image src='/SeriousSoccerPic.jpg' fluid rounded/>
+        </Col>
+        <Col md={6}>
+          <p>
+            Founded by <strong>Kaylee Strayer</strong>, a lifelong soccer player and passionate fitness coach,
+            Strayer Fitness was created to make health and confidence accessible to everyone. With over 18 years
+            of experience, Kaylee and her team combine science-based training, mental wellness, and a community-driven
+            approach to help you be your best self.
+          </p>
+          <p>
+            Whether you're just starting out or looking to take your fitness to the next level, our trainers will
+            guide you with expertise, energy, and genuine care.
+          </p>
+        </Col>
+      </Row>
+    </Container>
+
+    {/* Mission */}
+    <section className='hero-section py-5'>
+      <Container>
+        <h2 className='text-white text-center mb-4 fw-bold'>Our Mission</h2>
+        <p className='text-white text-center w-75 mx-auto'>
+          We believe fitness should be fun, sustainable, and empowering. Our mission is to provide personalized
+          training that helps clients not only look great but also feel confident, healthy, and fulfilled -
+          inside and out.
+        </p>
+      </Container>
+    </section>
+
+    {/* Contact */}
+    <Container fluid className='hero-section text-white py-5 text-center'>
+      <h2 className='fw-bold mb-3'>Get in Touch</h2>
+      <p className='mb-2'>Email: strayerFitness@outlook.com</p>
+      <p>Phone Number: 614-603-1543</p>
+    </Container>
     </>
   );
 }

@@ -51,13 +51,23 @@ function ApplicationLayout({}) {
   }
 
   return (
-    <Container fluid id='container' className='min-vh-100 d-flex flex-column px-0'>
-      <div id='header'>
-        <div className='py-5 px-3 bg-light text-center' style={{height: '150px'}}>
-          <h1>Strayer Fitness: Reimagining Health & Wellness</h1>
+    <Container fluid className='min-vh-100 d-flex flex-column px-0'>
+      {/* Header */}
+      <header className='site-header text-center text-white d-flex align-items-center justify-content-center'>
+        <div>
+          <h1 className='fw-bold'>Strayer Fitness</h1>
+          <p className='lead mb-0'>Reimagining Health & Wellness</p>
         </div>
-        <Navbar className='justify-content-between bg-secondary'>
-          <Nav className='bg-secondary'>
+      </header>
+
+      {/* Navigation */}
+        <Navbar expand='lg' bg='dark' variant='dark' className='shadow-sm py-2 px-3'>
+          <Navbar.Brand as={NavLink} to='/' className='fw-bold text-uppercase'>
+            SF
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls='main-nav'/>
+          <Navbar.Collapse id='main-nav' className='justify-content-between'>
+          <Nav>
             <Nav.Link as={NavLink} to='/'>Home</Nav.Link>
             <Nav.Link as={NavLink} to='/Scheduling'>Scheduling</Nav.Link>
             <Nav.Link as={NavLink} to='/Nutrition'>General Nutrition</Nav.Link>
@@ -66,21 +76,27 @@ function ApplicationLayout({}) {
             <Nav.Link as={NavLink} to='/TrainerTrove'>Trainers</Nav.Link>
             {auth?.isAuthenticated ? <Nav.Link as={NavLink} to='/Sessions'>Sessions</Nav.Link> : <></>}
           </Nav>
-          <Nav className='bg-secondary justify-content-end'>
+
+          <Nav className='justify-content-end'>
             {auth?.isAuthenticated ?
               <Nav.Link onClick={handleLogoutClick}>Log Out</Nav.Link>
               :
               <Nav.Link onClick={handleLoginClick}>Log In</Nav.Link>
             }
           </Nav>
+          </Navbar.Collapse>
         </Navbar>
-      </div>
 
-      <div id='body' className='px-2 py-3 mt-0 bg-light flex-grow-1'>
+      <main className='px-3 py-4 flex-grow-1' style={{background: 'linear-gradient(90deg, #2b2b2b, #3f3f3f)'}}>
         <Outlet />
-      </div>
+      </main>
 
-      <AuthModal show={showAuthModal} setShow={setShowAuthModal} authAction={authAction} setAuthAction={setAuthAction}/>
+      <AuthModal
+        show={showAuthModal}
+        setShow={setShowAuthModal}
+        authAction={authAction}
+        setAuthAction={setAuthAction}
+      />
     </Container>
   );
 }
