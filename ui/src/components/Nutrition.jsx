@@ -3,14 +3,14 @@ import {Container, Image} from 'react-bootstrap';
 function Nutrition() {
  return (
     <Container className='justify-content-center'>
-      <h1 className='display-4 text-center pb-2'>Nutrition</h1>
+      <h1 className='text-white display-4 text-center pb-2'>Nutrition</h1>
 
       <Container className='text-center pt-4 pb-2' style={{height: '400px'}}>
         <Image src='https://blog.nasm.org/hubfs/client-communication.jpg' className='h-100' fluid/>
       </Container>
 
-      <h1 className='display-6 pt-4 pb-2'>Overview</h1>
-      <p>
+      <h1 className='text-white display-6 pt-4 pb-2'>Overview</h1>
+      <p className='text-white'>
         Nutrition is often a big part of the conversation when it comes to fitness. While it is important to feed your 
         body what it needs in order to grow, it is often apparent that high emotions can accompany conversations about 
         "healthy" eating. Here at Strayer Fitness we aim to supply science-backed advice and recommendations that help 
@@ -18,23 +18,23 @@ function Nutrition() {
         have pertaining to nutrition and mental health.
       </p>
 
-      <h1 className='display-6 pt-4 pb-2'>Tailoring</h1>
-      <p>
+      <h1 className='text-white display-6 pt-4 pb-2'>Tailoring</h1>
+      <p className='text-white'>
         While there are broad ideas about nutrition that can be applied to the general population, there are tweaks and differences 
         that can be made on the individual level to better adapt to a client's lifestyle, goals, and preferences. When a client meets 
         with a trainer to talk about a tailored nutrition plan, the trainer will be able to learn more about their goals and current 
         lifestyle in order to tailor the general nutrition information to work better for the client.
       </p>
 
-      <h1 className='display-6 pt-4 pb-2'>General Tips</h1>
-      <p>
+      <h1 className='text-white display-6 pt-4 pb-2'>General Tips</h1>
+      <p className='text-white'>
         As discussed, while every person may have a different "ideal" nutrition plan, there are some broad guidelines that could 
         help a beginner start to discover what will work for them and their goals. Strayer Fitness aims to help the broader community 
         be able to get into fitness for as low a cost as possible, this is why we have detailed a few basic tips that could work for you!
       </p>
 
-      <h5 className='pt-4 pb-2'>Protein</h5>
-      <p>
+      <h5 className='text-white pt-4 pb-2'>Protein</h5>
+      <p className='text-white'>
         Protein consumption is probably one of the most contested part of modern-day sports nutrition, with common recommendations ranging from 1g per pound 
         to a much more modest 0.7g per pound of body weight. The general consensus is that going over around 1.2g of protein per pound of body 
         weight will not increase muscle mass accumulation any more than 1.2g. If the client aims to put on a large amount of lean mass or wants 
@@ -42,8 +42,8 @@ function Nutrition() {
         a client is not looking to add as much muscle mass or is aiming for overall fitness, much less protein is necessary on a daily basis.
       </p>
 
-      <h5 className='pt-4 pb-2'>Carbohydrates, Fats, Fruits, and Vegetables</h5>
-      <p>
+      <h5 className='text-white pt-4 pb-2'>Carbohydrates, Fats, Fruits, and Vegetables</h5>
+      <p className='text-white'>
         Carbohydrates are the next class of macro-nutrient that is often talked about when it comes to fitness. Carbohydrates main claim to fame is that they 
         are a great source of quickly-ready energy so that the body can perform better. These and fats are not to be avoided by any means when making a nutrition plan, they 
         are both an important part of a well-balanced diet and are each essential to the body on a daily basis. The amount of these consumed, however, is very 
@@ -55,8 +55,8 @@ function Nutrition() {
         smoothly!
       </p>
 
-      <h5 className='pt-4 pb-2'>Supplements</h5>
-      <p>
+      <h5 className='text-white pt-4 pb-2'>Supplements</h5>
+      <p className='text-white'>
         In terms of supplements, there is one big one that is often discussed and has the most research to back it up: creatine. Creatine allows muscles to grow in size 
         by allowing water to accumulate in and around the muslce so that it increases in size. This increase in water availability also allows for better muscle performance in some 
         cases and muscle mass accumulation. Another supplement that is not essential but is helpful in getting in a client's daily protein goal are protein supplements and powders. When 

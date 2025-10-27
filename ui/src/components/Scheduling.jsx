@@ -1,74 +1,101 @@
 //Includes session scheduling form and session options/other information
-import {Button} from 'react-bootstrap';
+import {Button, Container, Row, Col, Card} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
 function Scheduling () {
   return (
-    <>      
-      <h1 className='display-6 text-center pt-4 pb-2'>Session Information</h1><br></br>
+    <Container fluid className='hero-section text-white py-5'>
+      {/* Header */}
+      <header className='text-center mb-5'>
+        <h1 className='display-3 fw-bold'>Getting Started</h1>
+        <p className='lead text-light'>
+          Begin your journey toward a stronger, healthier you - one session at a time.
+        </p>
+      </header>
+      
+      {/* Information */}
+      <section className='mb-5 px-md-5'>
+        <h4 className='fw-bold text-uppercase'>General Information</h4>
+        <p className='mt-3'>
+          Your first consultation session is <strong>completely free</strong>. When scheduling the session, you'll
+          provide basic information like height, weight, and age so your trainer can design a plan that fits you perfectly.
+          During the consult, you'll have the opportunity to talk with your perspective trainer and get a feel for which one
+          of our flexible training packages below would be best for you!
+        </p>
+      </section>
 
-      <h5>General</h5>
-      <p>
-        When scheduling a first-time consult session (which is free) using our forms below,
-        the client will be asked to provide standard information about themselves such as height, weight,
-        and age so that the selected trainer will be able to have some information to go off of
-        when doing research and work prior to the consult. Once this information has been provided, the new client
-        will now be able to schedule their consult! From this consult the client will be able to 
-        choose what training schedule will suit them. Some of the available options are described below.  
-      </p>
+        {/* Packages */}
+      <section className='px-md-5'>
+        <h5 className='fw-bold text-uppercase mb-4'>Packages & Customizability</h5>
+        <p>
+          Every plan can be customized to meet your unique goals and schedule. Pricing may vary depending on the number of sessions,
+          inclusion of nutrition guidance, and virtual options.
+        </p>
+        
+        <Row className='g-4 pt-3'>
+          {/* Solo Journey */}
+          <Col md={4}>
+            <Card bg='dark' text='white' className='h-100 shadow-sm'>
+              <Card.Body>
+                <Card.Title className='fw-bold text-uppercase'>Solo Journey</Card.Title>
+                <Card.Text>
+                  Get personalized nutrition and workout plans designed for independence. Includes virtual check-ins with your trainer
+                  for accountability and guidance.
+                </Card.Text>
+                <p className='fw-bold mb-0'>Cost: $100 per week</p>
+              </Card.Body>
+            </Card>
+          </Col>
 
-      <h5 className='pt-4 pb-2'>Packages & Customizability</h5>
-      <p>
-        Each option below is open to customization and specific cost analysis during discussions with the 
-        training staff. This customization may include additions or subtractions of virtual sessions, virtual 
-        training and sport-specific work.
-      </p>
+          {/* 50/50 Package */}
+          <Col md={4}>
+            <Card bg='dark' text='white' className='h-100 shadow-sm'>
+              <Card.Body>
+                <Card.Title className='fw-bold text-uppercase'>50/50 Package</Card.Title>
+                <Card.Text>
+                  Combine personal training and at-home flexibility. Includes up to 3 in-person sessions weekly
+                  and full programming support from your trainer.
+                </Card.Text> 
+                <p className='fw-bold mb-0'>Cost: $300 per week</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        
+        {/* Full Package */}
+          <Col md={4}>
+            <Card bg='dark' text='white' className='h-100 shadow-sm'>
+              <Card.Body>
+                <Card.Title className='fw-bold text-uppercase'>Full Package</Card.Title>
+                <Card.Text>
+                  For those ready to go all in - up to 5 sessions per week, complete nutritional guidance, and daily cardio +
+                  weightlifting programming.
+                </Card.Text> 
+                <p className='fw-bold mb-0'>Cost: $500 per week</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </section>
 
-      <h6 className='fw-bold pt-4 pb-2'>Solo Journey</h6>
-      <p>
-        This includes specially-tailored nutrition and workout plans. These plans will be sent virtually
-        and the client will have the freedom to use them however they please. Virtual consults with the trainer 
-        will be available weekly.
-      </p>
-      <p>
-        Cost: $100 per week
-      </p>
-    
-      <h6 className='fw-bold pt-4 pb-2'>50/50 Package</h6>
-      <p>
-        This is an all inclusive package that pays for any nutrition and workout programming
-        the trainer will do outside of direct client interaction and includes the ability to 
-        schedule up to 3 sessions a week including 1 cardio and weightlifting session a day.
-      </p>  
-      <p>
-        Cost: $300 per week
-      </p>
-
-      <h6 className='fw-bold pt-4 pb-2'>Full Package</h6>
-      <p>
-        This is an all inclusive package that pays for any nutrition and workout programming
-        the trainer will do outside of direct client interaction and includes the ability to 
-        schedule up to 5 sessions a week including 1 cardio and weightlifting session a day.
-      </p>  
-      <p>
-        Cost: $500 per week
-      </p>
-
-      <h5 className='fw-bold pt-4'>Disclaimer</h5>
-      <p>
-        We aim to be affordable while also supplying our trainers with what they need. If you 
-        find a more competitive rate please let us know!
-      </p><br></br>
-
-      <div className='text-center'>
+      {/* Disclaimer */}
+      <section className='text-center mt-5 px-md-5'>
+        <h5 className='fw-bold text-uppercase'>Disclaimer</h5>
+        <p>
+        We aim to be affordable while providing high-quality, effective training. If you 
+        find a more competitive rate, please reach out - we'd love to work something out!
+        </p>
+      </section>
+      
+      {/* Scheduling Buttons */}
+      <div className='text-center mt-4'>
         <Link to='/sessions/new'>
-          <Button className='m-2' variant='dark' size='lg'>Schedule a Session!</Button>
+          <Button className='m-2 fw-bold' variant='light' size='lg'>Schedule a Session!</Button>
         </Link>
         <Link to='/clients/new'>
-          <Button className='m-2' variant='dark' size='lg'>Sign Up As A Client!</Button>
+          <Button className='m-2 fw-bold' variant='outline-light' size='lg'>Sign Up As A Client!</Button>
         </Link>
       </div>
-    </>
+    </Container>
   );
 }
 
