@@ -20,8 +20,8 @@ const Session = ({session}) => {
   if (trainerId !== session.trainer?.id) return null;
   
   return (
-    <Container className='my-4'>
-      <h2>Session Details</h2>
+    <Container className='text-white text-center my-4 py-4 rounded-4' fluid>
+      <h2 className='display-6 pb-3'>Session Details</h2>
 
       <Row className='mb-2'>
         <Col xs={4}>Session on: {new Date(session.session_date).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}</Col>

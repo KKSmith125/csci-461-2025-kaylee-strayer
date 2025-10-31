@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { useSelector } from 'react-redux';
 
 const localizer = momentLocalizer(moment);
 
@@ -18,11 +19,15 @@ const Sessions = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [view, setView] = useState('month');
   const [date, setDate] = useState(new Date());
+  const {trainer} = useSelector(state => state.auth);
+  const trainerId = trainer?.id;
 
   useEffect(() => {
     axios.get('/api/sessions')
       .then(response => {
-        setSessions(response.data);
+        const trainerSessions = response.data.filter(session => session.trainer?.id === trainerId);
+        setSessions(trainerSessions);
+
         setAlerts([]);
 
         if (location.state?.alert) {
@@ -36,7 +41,7 @@ const Sessions = () => {
       .finally(() => {
         setIsLoading(false);
       })
-  }, [location.state]);
+  }, [location.state, trainerId]);
 
   const reasonList = (session) => session.reasons.map((reason) => reason.name).join(', ');
 
@@ -80,50 +85,65 @@ const Sessions = () => {
       title: `Client: ${session.client.name}`,
       start,
       end,
-      reason: reasonList(session),
+      reason: reasonList(session)
     }
   })
 
   return (
-    <Container className='pt-3'>
+    <Container className='text-white text-center py-4' fluid>
       {alerts.map((alert, index) => (
-        <Alert key={index} variant={alert.variant} dismissible>{alert.message}</Alert>
+        <Alert key={index} variant={alert.variant} dismissible className='mx-auto w-75'>{alert.message}</Alert>
       ))}
 
-      <h3 className='pe-3 pb-3 text-center'>Sessions Calendar</h3>
+      <h3 className='display-4 pe-3 pb-3 text-center'>Sessions Calendar</h3>
 
       {isLoading ? 
-      <div className='d-flex justify-content-center'><Spinner animation='border'></Spinner></div>
+      <div className='d-flex justify-content-center align-items-center' style={{height: '400px'}}><Spinner animation='border'></Spinner></div>
       : 
       <>
         {sessions.length === 0 ?
           <p>No sessions found.</p>
           :
-          <Calendar 
-            localizer={localizer}
-            events={events}
-            startAccessor='start'
-            endAccessor='end'
-            style={{height:600}}
-            onSelectEvent={handleEventClick}
-            view={view}
-            date={date}
-            onView={(newView) => setView(newView)}
-            onNavigate={(newDate) => setDate(newDate)}
-          />
+          <Container className='bg-dark rounded-4 p-3 mt-3' style={{height: 700}}>
+            <Calendar 
+              localizer={localizer}
+              events={events}
+              startAccessor='start'
+              endAccessor='end'
+              style={{height: '100%', borderRadius: '12px'}}
+              eventPropGetter={(event) => {
+                let backgroundColor = '#444';
+                let textColor = '#fff';
+
+                return {
+                  style: {
+                    backgroundColor,
+                    color: textColor,
+                    borderRadius: '6px',
+                    border: '1px solid #666'
+                  },
+                };
+              }}
+              onSelectEvent={handleEventClick}
+              view={view}
+              date={date}
+              onView={(newView) => setView(newView)}
+              onNavigate={(newDate) => setDate(newDate)}
+            />
+          </Container>
         }
       </>}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{selectedEvent?.title}</Modal.Title>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered contentClassName='bg-dark text-white rounded-4 border border-secondary'>
+        <Modal.Header closeButton closeVariant='white' className='border-secondary'>
+          <Modal.Title className='fw-bold'>{selectedEvent?.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p>Reason: {selectedEvent?.reason}</p>
-          <p>Date: {moment(selectedEvent?.start).format('MMMM D, YYYY')}</p>
+        <Modal.Body className='bg-secondary bg-opacity-25'>
+          <p><strong>Reason:</strong> {selectedEvent?.reason}</p>
+          <p><strong>Date:</strong> {moment(selectedEvent?.start).format('MMMM D, YYYY')}</p>
         </Modal.Body>
-        <Modal.Footer>
-          <Button as={Link} to={`/sessions/${selectedEvent?.id}/edit`} variant='secondary' className='me-1'>
+        <Modal.Footer className='border-secondary'>
+          <Button as={Link} to={`/sessions/${selectedEvent?.id}/edit`} variant='secondary' className='me-2'>
             <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' className='bi bi-pen' viewBox='0 0 16 16'>
               <path d='m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z' />
             </svg>
