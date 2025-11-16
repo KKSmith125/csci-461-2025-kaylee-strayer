@@ -11,6 +11,9 @@ app.use(cors({origin: 'http://localhost:3000', credentials: true}));
 const cookies = require('cookie-parser');
 app.use(cookies());
 
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 const trainerRoutes = require('./routes/trainerRoutes');
 app.use('/api/trainers', trainerRoutes);
 

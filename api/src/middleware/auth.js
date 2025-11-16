@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const pgClient = require('../config/pgClient');
 
 function authenticate(req, res, next) {
-  const token = req.cookies?.jwt || req.headers['x-access=token'];
+  const token = req.cookies?.jwt || req.headers['x-access-token'];
 
   if (!token) {
     return res.status(401).json({error: 'No one is logged in.'});
@@ -13,7 +13,7 @@ function authenticate(req, res, next) {
       return res.status(401).json({error: `Bad token. ${error}`});
     }
     else {
-      pgClient.query('SELECT id, email FROM trainers WHERE id = $1', [decoded.id])
+      pgClient.query('SELECT id, email FROM user_accounts WHERE id = $1', [decoded.id])
         .then(results => {
           if (results.rowCount > 0) {
             res.locals.user = results.rows[0];
