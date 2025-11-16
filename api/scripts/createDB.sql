@@ -12,6 +12,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 DROP TABLE IF EXISTS client_reasons CASCADE;
 DROP TABLE IF EXISTS sessions CASCADE;
+DROP TABLE IF EXISTS user_accounts CASCADE;
 DROP TABLE IF EXISTS trainers CASCADE;
 DROP TABLE IF EXISTS clients CASCADE;
 DROP TABLE IF EXISTS reasons CASCADE;
@@ -19,10 +20,7 @@ DROP TABLE IF EXISTS reasons CASCADE;
 CREATE TABLE trainers (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  description VARCHAR (2000) NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  password VARCHAR(100) NOT NULL,
-  google_id VARCHAR(225) UNIQUE
+  description VARCHAR (2000) NOT NULL
 );
 
 CREATE TABLE clients (
@@ -31,6 +29,16 @@ CREATE TABLE clients (
   weight INTEGER,
   height_ft INTEGER,
   height_in INTEGER
+);
+
+CREATE TABLE user_accounts (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(100) NOT NULL,
+  google_id VARCHAR(225) UNIQUE,
+  role VARCHAR(20) NOT NULL CHECK (role IN('TRAINER', 'CLIENT')),
+  trainer_id INTEGER REFERENCES trainers(id) ON DELETE CASCADE,
+  client_id INTEGER REFERENCES clients(id) ON DELETE CASCADE
 );
 
 CREATE TABLE reasons (
@@ -75,11 +83,16 @@ DO $$
   second_session_id INT;
 
   BEGIN
-    INSERT INTO trainers(name, description, email, password) VALUES ('Kaylee Strayer', 'A dedicated trainer who has spent years refining expertise in areas such as weight management, muscle building, nutrition and soccer. Takes a tailored approach with each client, involving them in the decision-making process from the very beginning.', 'kayleestrayerdoglover@gmail.com', crypt('bigGainz26', 'fixedsaltvalue')) RETURNING id INTO kaylee_trainer_id;
-    INSERT INTO trainers(name, description, email, password) VALUES ('Michael DeSanty', 'A dedicated trainer who loves Chuck Norris jokes.', 'mdesanty6@gmail.com', crypt('chuckJokes90!', 'fixedsaltvalue')) RETURNING id INTO michael_trainer_id;
+    INSERT INTO trainers(name, description) VALUES ('Kaylee Strayer', 'A dedicated trainer who has spent years refining expertise in areas such as weight management, muscle building, nutrition and soccer. Takes a tailored approach with each client, involving them in the decision-making process from the very beginning.') RETURNING id INTO kaylee_trainer_id;
+    INSERT INTO trainers(name, description) VALUES ('Michael DeSanty', 'A dedicated trainer who loves Chuck Norris jokes.') RETURNING id INTO michael_trainer_id;
 
     INSERT INTO clients(name, weight, height_ft, height_in) VALUES ('John Smith', 200, 5, 11) RETURNING id INTO john_client_id;
     INSERT INTO clients(name, weight, height_ft, height_in) VALUES ('Mandy Blathe', 150, 5, 4) RETURNING id INTO mandy_client_id;
+
+    INSERT INTO user_accounts(email, password, role, trainer_id) VALUES ('kayleestrayerdoglover@gmail.com', crypt('bigGainz26', 'fixedsaltvalue'), 'TRAINER', kaylee_trainer_id);
+    INSERT INTO user_accounts(email, password, role, trainer_id) VALUES ('mdesanty6@gmail.com', crypt('chuckJokes90!', 'fixedsaltvalue'), 'TRAINER', michael_trainer_id);
+    INSERT INTO user_accounts(email, password, role, client_id) VALUES ('johnSmith@gmail.com', crypt('perfectForm87!', 'fixedsaltvalue'), 'CLIENT', john_client_id);
+    INSERT INTO user_accounts(email, password, role, client_id) VALUES ('mandyBlathe@gmail.com', crypt('idealStance81!', 'fixedsaltvalue'), 'CLIENT', mandy_client_id);
 
     INSERT INTO reasons(name) VALUES('Mental Toughness') RETURNING id INTO mental_toughness_id;
     INSERT INTO reasons(name) VALUES('Weight Loss') RETURNING id INTO weight_id;
@@ -89,7 +102,7 @@ DO $$
     INSERT INTO reasons(name) VALUES('Sports') RETURNING id INTO sport_id;
 
     INSERT INTO sessions (session_date, session_time, trainer_id, client_id) VALUES ('2025-12-20', '16:00', kaylee_trainer_id, john_client_id) RETURNING id INTO first_session_id;
-    INSERT INTO sessions (session_date, session_time, trainer_id, client_id) VALUES ('2025-11-10', '16:00', michael_trainer_id, mandy_client_id) RETURNING id INTO second_session_id;
+    INSERT INTO sessions (session_date, session_time, trainer_id, client_id) VALUES ('2025-12-10', '16:00', michael_trainer_id, mandy_client_id) RETURNING id INTO second_session_id;
     
     INSERT INTO client_reasons (session_id, reason_id) VALUES (first_session_id, casual_id);
     INSERT INTO client_reasons (session_id, reason_id) VALUES (second_session_id, sport_id);
