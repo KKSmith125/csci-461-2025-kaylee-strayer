@@ -2,9 +2,9 @@ import {authenticate, unauthenticate} from '../components/slices/authSlice.js';
 import store from '../store.js';
 import axios from 'axios';
 
-const googleLogin = async (idToken) => {
+const googleLogin = async (credential) => {
   try {
-    const response = await axios.post('/api/auth/google-login', {idToken});
+    const response = await axios.post('/api/auth/google-login', {credential});
     store.dispatch(authenticate(response.data));
     console.log('Google login successful: ', response.data);
   } catch (error) {

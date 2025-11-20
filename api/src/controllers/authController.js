@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const {verifyGoogleToken} = require('../middleware/googleAuth');
 
 async function googleLogin(req, res) {
-  const idToken = req.body.credential;
+  const idToken = req.body.credentials;
 
   if (!idToken) {
     return res.redirect('http://localhost:3000?error=notoken');
@@ -11,14 +11,14 @@ async function googleLogin(req, res) {
 
   try {
     const googleUser = await verifyGoogleToken(idToken);
-    const userQuery = await pgClient.query('SELECT id, email FROM user_accounts WHERE email = $1', [googleUser.email]);
+    const userQuery = await pgClient.query('SELECT id, email, role FROM user_accounts WHERE email = $1', [googleUser.email]);
 
     if (userQuery.rowCount === 0) {
       return res.redirect('http://localhost:3000?error=notfound');
     }
 
     const currentUser = userQuery.rows[0];
-    const token = jwt.sign({id: currentUser.id}, process.env.JWT_SECRET, {expiresIn: '2d'});
+    const token = jwt.sign({id: currentUser.id, email: currentUser.email, role: currentUser.role}, process.env.JWT_SECRET, {expiresIn: '2d'});
     res.cookie('jwt', token, {httpOnly: true, sameSite: 'Lax', secure: false});
     res.redirect('http://localhost:3000');
   } catch (err) {
@@ -47,7 +47,7 @@ function login(req, res) {
   pgClient.query('SELECT id, email, password, role FROM user_accounts WHERE email = $1 AND password = crypt($2, password)', [email, password])
     .then(results => {
       if(results.rowCount > 0) {
-        const token = generateToken({id: results.rows[0].id});
+        const token = jwt.sign({id: results.rows[0].id, email: results.rows[0].email, role: results.rows[0].role}, process.env.JWT_SECRET, {expiresIn: '2d'});
         const payload = {
           id: results.rows[0].id,
           role: results.rows[0].role,
