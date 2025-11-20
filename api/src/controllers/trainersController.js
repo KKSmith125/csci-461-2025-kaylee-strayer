@@ -1,7 +1,7 @@
 const pgClient = require('../config/pgClient');
 
 const index = (req, res) => {
-  pgClient.query('SELECT id, name, description, email FROM trainers ORDER BY name ASC')
+  pgClient.query('SELECT id, name, description FROM trainers ORDER BY name ASC')
     .then(results => {
       res.status(200).json(results.rows);
     })

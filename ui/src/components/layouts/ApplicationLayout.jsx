@@ -17,7 +17,7 @@ function ApplicationLayout({}) {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const res = await axios.get('/api/trainers/verifyToken', {withCredentials: true});
+        const res = await axios.get('/api/auth/verifyToken', {withCredentials: true});
         dispatch(authenticate(res.data.user));
       } catch (error) {
         dispatch(unauthenticate());

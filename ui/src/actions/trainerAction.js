@@ -18,7 +18,8 @@ const verifyToken = () => {
 
   axios.get('/api/auth/verifyToken')
     .then(response => {
-      store.dispatch(authenticate(response.data.user)); 
+      const user = {id: response.data.user.id, email: response.data.user.email, role: response.data.user.role};
+      store.dispatch(authenticate(user)); 
     })
     .catch(error => {
       console.log('Token verification failed.');

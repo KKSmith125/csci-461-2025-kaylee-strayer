@@ -76,13 +76,16 @@ function logout(req, res) {
   res.json({message: 'Logged out successfully.'});
 }
 
-function generateToken(attributes) {
-  return jwt.sign(attributes, process.env.JWT_SECRET, {expiresIn: '2 days'});
-}
-
 function verifyToken(req, res) {
-  if (res.locals.user !== undefined) {
-    res.json({message: 'Token is valid', user: res.locals.user});
+  const user = res.locals.user;
+  if (user) {
+    const payload = {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    };
+
+    res.json({message: 'Token is valid', user: payload});
   }
   else {
     res.status(401).json({error: 'No one is logged in.'});
