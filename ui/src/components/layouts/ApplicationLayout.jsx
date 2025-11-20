@@ -35,7 +35,7 @@ function ApplicationLayout({}) {
 
   function handleLogoutClick() {
     setAuthAction('logout');
-    axios.post('/api/trainers/logout', {}, {withCredentials: true})
+    axios.post('/api/auth/logout', {}, {withCredentials: true})
       .then(response => {
         console.log(response.data);
         dispatch(unauthenticate());

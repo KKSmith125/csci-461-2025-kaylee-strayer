@@ -35,7 +35,7 @@ function AuthModal({show, setShow, authAction, setAuthAction}) {
   }, [show]);
 
   function handleGoogleCallback(response) {
-    axios.post('/api/trainers/google-login', {credential: response.credential}, {withCredentials: true})
+    axios.post('/api/auth/google-login', {credential: response.credential}, {withCredentials: true})
       .then(res => {
         dispatch(authenticate(res.data.user));
         resetForm();
@@ -51,7 +51,7 @@ function AuthModal({show, setShow, authAction, setAuthAction}) {
     e.preventDefault();
     setIsLoading(true);
 
-    axios.post('/api/trainers/login', formData,{withCredentials: true})
+    axios.post('/api/auth/login', formData,{withCredentials: true})
       .then(response => {
         dispatch(authenticate(response.data));
         resetForm();

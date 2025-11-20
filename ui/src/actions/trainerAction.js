@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const googleLogin = async (idToken) => {
   try {
-    const response = await axios.post('/api/trainers/google-login', {idToken});
+    const response = await axios.post('/api/auth/google-login', {idToken});
     store.dispatch(authenticate(response.data));
     console.log('Google login successful: ', response.data);
   } catch (error) {
@@ -16,7 +16,7 @@ const googleLogin = async (idToken) => {
 const verifyToken = () => {
   console.log('Verifying token...');
 
-  axios.get('/api/trainers/verifyToken')
+  axios.get('/api/auth/verifyToken')
     .then(response => {
       store.dispatch(authenticate(response.data.user)); 
     })
