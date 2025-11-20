@@ -8,12 +8,14 @@ const SessionForm = ({session}) => {
   const navigate = useNavigate();
   const [alert, setAlert] = useState({message: '', variant: ''});
   const [errors, setErrors] = useState({});
-  const [clients, setClients] = useState([]);
   const [trainers, setTrainers] = useState([]);
+  const [clients, setClients] = useState([]);
   const [reasons, setReasons] = useState([]);
+  const loggedInUser = useSelector(state => state.auth.user);
+  const isClient = loggedInUser?.role === 'CLIENT';
+  const isTrainer = loggedInUser?.role === 'TRAINER';
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const trainer = useSelector(state => state.auth.trainer);
   const [formData, setFormData] = useState({
     session_date: '',
     session_time: '',
@@ -32,13 +34,16 @@ const SessionForm = ({session}) => {
         reason_ids: session.reasons.map(i => i.id) || []
       });
     }
-  }, [session, trainer]);
+  }, [session]);
 
   useEffect(() => {
-    if (trainer?.id) {
-      setFormData(prev => ({...prev, trainer_id: trainer.id}));
+    if (loggedInUser?.id && loggedInUser.role == 'CLIENT') {
+      setFormData(prev => ({...prev, client_id: loggedInUser.id}));
     }
-  }, [session, trainer]);
+    if (loggedInUser?.id && loggedInUser.role === 'TRAINER') {
+      setFormData(prev => ({...prev, trainer_id: loggedInUser.id}));
+    }
+  }, [loggedInUser]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,8 +55,8 @@ const SessionForm = ({session}) => {
     ])
       .then(([trainersResponse, clientsResponse, reasonsResponse]) => {
         setTrainers(trainersResponse.data);
-        setClients(clientsResponse.data);
         setReasons(reasonsResponse.data);
+        setClients(clientsResponse.data);
       })
       .catch(error => {
         setAlert({message: 'Failed to load data', variant: 'danger'});
@@ -74,8 +79,8 @@ const SessionForm = ({session}) => {
 
     console.log('Submitting formData:', formData);
 
-    if (!session?.id && trainer?.id) {
-      formData.trainer_id = trainer.id;
+    if (!session?.id && loggedInUser?.id && isTrainer) {
+      formData.trainer_id = loggedInUser.id;
     }
     const apiCall = !!session?.id ? axios.put(`/api/sessions/${session.id}`, formData) : axios.post('/api/sessions', formData);
 
@@ -96,71 +101,85 @@ const SessionForm = ({session}) => {
       });
   }
 
-  return (
-    <>
-      {!!alert.message &&
-        <Alert className='text-center' variant={alert.variant} onClose={() => setAlert({message: '', variant: ''})} dismissible>{alert.message}</Alert>
-      }
+  if (!loggedInUser) {
+    return (
+      <Container className='text-center py-5'>
+        <Alert variant='warning'>
+          You have to be logged in to book a session.
+        </Alert>
+      </Container>
+    )
+  } else {
+    return (
+      <>
+        {!!alert.message &&
+          <Alert className='text-center' variant={alert.variant} onClose={() => setAlert({message: '', variant: ''})} dismissible>{alert.message}</Alert>
+        }
 
-      {isLoading && <center><Spinner animation='border'></Spinner></center>}
+        {isLoading && <center><Spinner animation='border'></Spinner></center>}
 
-      <Row>
-        <Container as={Col} xs={7} className='bg-light text-black rounded p-2'>
-          <Form className='p-2'>
-            <Row>
-              <Form.Group className='pb-2'>
-                <Form.Label>Session Date</Form.Label>
-                <Form.Control type='date' value={formData.session_date} isInvalid={!!errors.session_date} onChange={(e) => handleInputChange(e, 'session_date')}></Form.Control>
-                <Form.Control.Feedback type='invalid'>{errors.session_date}</Form.Control.Feedback>
-              </Form.Group>
+        <Row>
+          <Container as={Col} xs={7} className='bg-light text-black rounded p-2'>
+            <Form className='p-2'>
+              <Row>
+                <Form.Group className='pb-2'>
+                  <Form.Label>Session Date</Form.Label>
+                  <Form.Control type='date' value={formData.session_date} isInvalid={!!errors.session_date} onChange={(e) => handleInputChange(e, 'session_date')}></Form.Control>
+                  <Form.Control.Feedback type='invalid'>{errors.session_date}</Form.Control.Feedback>
+                </Form.Group>
 
-              <Form.Group className='pb-2'>
-                <Form.Label>Session Time</Form.Label>
-                <Form.Control type='time' value={formData.session_time} isInvalid={!!errors.session_time} onChange={(e) => handleInputChange(e, 'session_time')}></Form.Control>
-                <Form.Control.Feedback type='invalid'>{errors.session_time}</Form.Control.Feedback>
-              </Form.Group>
+                <Form.Group className='pb-2'>
+                  <Form.Label>Session Time</Form.Label>
+                  <Form.Control type='time' value={formData.session_time} isInvalid={!!errors.session_time} onChange={(e) => handleInputChange(e, 'session_time')}></Form.Control>
+                  <Form.Control.Feedback type='invalid'>{errors.session_time}</Form.Control.Feedback>
+                </Form.Group>
 
-              <Form.Group as={Col} lg={6} className='pb-2'>
-               <Form.Label>Client</Form.Label>
-                <Form.Select type='text' value={formData.client_id} isInvalid={!!errors.client_id} onChange={(e) => handleInputChange(e, 'client_id')}>
-                  <option value=''>Select Client</option>
-                  {clients.map(client => <option value={client.id} key={client.name}>{client.name}</option>)}
-                </Form.Select>
-                <Form.Control.Feedback type='invalid'>{errors.client_id}</Form.Control.Feedback>
-              </Form.Group>
+                <Form.Group as={Col} lg={6} className='pb-2'>
+                <Form.Label>Client</Form.Label>
+                  <Form.Select value={formData.client_id} isInvalid={!!errors.client_id} disabled>
+                    <option value=''>Select Client</option>
+                    {isClient ? (
+                      <option value={loggedInUser.id}>{loggedInUser.name || loggedInUser.email}</option>
+                    ) : (
+                      clients.map(client => (<option key={client.id} value={client.id}>{client.name}</option>))
+                    )}
+                  </Form.Select>
+                  <Form.Control.Feedback type='invalid'>{errors.client_id}</Form.Control.Feedback>
+                </Form.Group>
 
-              <Form.Group as={Col} lg={6} className='pb-2'>
-                <Form.Label>Trainer</Form.Label>
-                <Form.Select type='text' value={formData.trainer_id} isInvalid={!!errors.trainer_id} onChange={(e) => handleInputChange(e, 'trainer_id')}>
-                  <option value=''>Select Trainer</option>
-                  {trainers.map(trainer => <option value={trainer.id} key={trainer.name}>{trainer.name}</option>)}
-                </Form.Select>
-                <Form.Control.Feedback type='invalid'>{errors.trainer_id}</Form.Control.Feedback>
-              </Form.Group>
-              
-              <Form.Group as={Col} lg={6} className='pb-2'>
-                <Form.Label>Reasons</Form.Label>
-                <Form.Control as='select' multiple value={formData.reason_ids} isInvalid={!!errors.reason_ids} onChange={(e) => {setErrors({...errors, reason_ids: ''}); setFormData({...formData, reason_ids: Array.from(e.target.selectedOptions, option => parseInt(option.value))});}} style={{height: '300px'}}>
-                  {reasons.map(reason => <option value={reason.id} key={reason.id}>{reason.name}</option>)}
-                </Form.Control>
-                <Form.Control.Feedback type='invalid'>{errors.reason_ids}</Form.Control.Feedback>
-              </Form.Group>
+                <Form.Group as={Col} lg={6} className='pb-2'>
+                  <Form.Label>Trainer</Form.Label>
+                  <Form.Select type='text' value={formData.trainer_id} isInvalid={!!errors.trainer_id} onChange={(e) => handleInputChange(e, 'trainer_id')}>
+                    <option value=''>Select Trainer</option>
+                    {trainers.map(trainer => <option value={trainer.id} key={trainer.name}>{trainer.name}</option>)}
+                  </Form.Select>
+                  <Form.Control.Feedback type='invalid'>{errors.trainer_id}</Form.Control.Feedback>
+                </Form.Group>
+                
+                <Form.Group as={Col} lg={6} className='pb-2'>
+                  <Form.Label>Reasons</Form.Label>
+                  <Form.Control as='select' multiple value={formData.reason_ids} isInvalid={!!errors.reason_ids} onChange={(e) => {setErrors({...errors, reason_ids: ''}); setFormData({...formData, reason_ids: Array.from(e.target.selectedOptions, option => parseInt(option.value))});}} style={{height: '300px'}}>
+                    {reasons.map(reason => <option value={reason.id} key={reason.id}>{reason.name}</option>)}
+                  </Form.Control>
+                  <Form.Control.Feedback type='invalid'>{errors.reason_ids}</Form.Control.Feedback>
+                </Form.Group>
 
-              <Form.Group className='mt-4'>
-                <Button variant='primary' type='submit' disabled={isSubmitting} className='me-2 btn-action' onClick={handleSubmit} style={{minWidth: '80px'}}>
-                  {isSubmitting ? <Spinner size='sm'/> : 'Save'}
-                </Button>
+                <Form.Group className='mt-4'>
+                  <Button variant='primary' type='submit' disabled={isSubmitting} className='me-2 btn-action' onClick={handleSubmit} style={{minWidth: '80px'}}>
+                    {isSubmitting ? <Spinner size='sm'/> : 'Save'}
+                  </Button>
 
-                <Button variant='secondary' type='button' style={{minWidth: '80px'}} onClick={() => navigate('/sessions')}>
-                  Cancel
-                </Button>
-              </Form.Group>
-            </Row>
-          </Form>
-        </Container>
-      </Row>
-    </>
-  );
+                  <Button variant='secondary' type='button' style={{minWidth: '80px'}} onClick={() => navigate('/sessions')}>
+                    Cancel
+                  </Button>
+                </Form.Group>
+              </Row>
+            </Form>
+          </Container>
+        </Row>
+      </>
+    );
+  }
 }
 
 export default SessionForm;

@@ -56,8 +56,10 @@ function login(req, res) {
         };
 
         res.cookie('jwt', token, {
-          maxAge: 1000000,
-          httpOnly: true
+          maxAge: 2 * 24 * 60 * 60 * 1000,
+          httpOnly: true,
+          sameSite: 'Lax',
+          secure: false
         });
 
         res.json(payload);

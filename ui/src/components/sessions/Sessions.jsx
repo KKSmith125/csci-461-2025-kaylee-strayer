@@ -20,7 +20,7 @@ const Sessions = () => {
   const [view, setView] = useState('month');
   const [date, setDate] = useState(new Date());
   const {user} = useSelector(state => state.auth);
-  const trainerId = user?.role === 'trainer' ? user.id : null;
+  const trainerId = user?.role === 'TRAINER' ? user.id : null;
 
   useEffect(() => {
     axios.get('/api/sessions')

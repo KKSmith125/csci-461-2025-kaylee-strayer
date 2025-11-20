@@ -91,7 +91,7 @@ DO $$
 
     INSERT INTO user_accounts(email, password, role, trainer_id) VALUES ('kayleestrayerdoglover@gmail.com', crypt('bigGainz26', 'fixedsaltvalue'), 'TRAINER', kaylee_trainer_id);
     INSERT INTO user_accounts(email, password, role, trainer_id) VALUES ('mdesanty6@gmail.com', crypt('chuckJokes90!', 'fixedsaltvalue'), 'TRAINER', michael_trainer_id);
-    INSERT INTO user_accounts(email, password, role, client_id) VALUES ('johnSmith@gmail.com', crypt('perfectForm87!', 'fixedsaltvalue'), 'CLIENT', john_client_id);
+    INSERT INTO user_accounts(email, password, role, client_id) VALUES ('kayleestrayerofficial@gmail.com', crypt('perfectForm87!', 'fixedsaltvalue'), 'CLIENT', john_client_id);
     INSERT INTO user_accounts(email, password, role, client_id) VALUES ('mandyBlathe@gmail.com', crypt('idealStance81!', 'fixedsaltvalue'), 'CLIENT', mandy_client_id);
 
     INSERT INTO reasons(name) VALUES('Mental Toughness') RETURNING id INTO mental_toughness_id;

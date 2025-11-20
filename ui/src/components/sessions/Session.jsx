@@ -2,8 +2,11 @@ import {Container, Row, Col} from 'react-bootstrap';
 import {useSelector} from 'react-redux';
 
 const Session = ({session}) => {
-  const{trainer} = useSelector(state => state.auth);
-  const trainerId = trainer?.id;
+  const user = useSelector(state => state.auth.user);
+  const isTrainer = user?.role === 'TRAINER';
+  const isClient = user?.role == 'CLIENT';
+  const trainerId = isTrainer ? user?.id : null;
+  const clientId = isClient ? user?.id : null;
 
   function formatTime(militaryTime) {
     const [hours, minutes] = militaryTime.split(':');
@@ -17,7 +20,7 @@ const Session = ({session}) => {
     return session.reasons.map((reason) => reason.name).join(', ');
   }
 
-  if (trainerId !== session.trainer?.id) return null;
+  if (trainerId !== session.trainer?.id && clientId !== session.client?.id) return null;
   
   return (
     <Container className='text-white text-center my-4 py-4 rounded-4' fluid>

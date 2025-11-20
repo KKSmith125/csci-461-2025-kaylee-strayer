@@ -16,7 +16,7 @@ const googleLogin = async (credential) => {
 const verifyToken = () => {
   console.log('Verifying token...');
 
-  axios.get('/api/auth/verifyToken')
+  axios.get('/api/auth/verifyToken', {withCredentials: true})
     .then(response => {
       const user = {id: response.data.user.id, email: response.data.user.email, role: response.data.user.role};
       store.dispatch(authenticate(user)); 
