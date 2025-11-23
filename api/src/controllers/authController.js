@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const {verifyGoogleToken} = require('../middleware/googleAuth');
 
 async function googleLogin(req, res) {
-  const idToken = req.body.credentials;
+  const idToken = req.body.credential;
 
   if (!idToken) {
     return res.redirect('http://localhost:3000?error=notoken');
