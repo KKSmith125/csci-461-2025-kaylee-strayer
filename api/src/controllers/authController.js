@@ -12,7 +12,7 @@ async function googleLogin(req, res) {
   try {
     const googleUser = await verifyGoogleToken(idToken);
     const userQuery = await pgClient.query('SELECT id, email, role, client_id, trainer_id FROM user_accounts WHERE email = $1', [googleUser.email]);
-
+    
     if (userQuery.rowCount === 0) {
       return res.redirect('http://localhost:3000?error=notfound');
     }

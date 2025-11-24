@@ -18,7 +18,7 @@ const verifyToken = () => {
 
   axios.get('/api/auth/verifyToken', {withCredentials: true})
     .then(response => {
-      const user = {id: response.data.user.id, email: response.data.user.email, role: response.data.user.role};
+      const user = {id: response.data.user.id, email: response.data.user.email, role: response.data.user.role, client_id: response.data.user.client_id, trainer_id: response.data.user.trainer_id};
       store.dispatch(authenticate(user)); 
     })
     .catch(error => {
