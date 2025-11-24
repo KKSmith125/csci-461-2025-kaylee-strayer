@@ -84,13 +84,13 @@ const SessionForm = ({session}) => {
     console.log('Submitting formData:', formData);
 
     if (!session?.id && loggedInUser?.id && isTrainer) {
-      setFormData(prev => ({...prev, trainer_id: loggedInUser.id}));
+      setFormData(prev => ({...prev, trainer_id: loggedInUser.trainer_id}));
     }
 
     const payload = {
       ...formData,
-      trainer_id: isTrainer ? loggedInUser.id : formData.trainer_id,
-      client_id: isClient ? loggedInUser.id : formData.client_id,
+      trainer_id: isTrainer ? loggedInUser.trainer_id : formData.trainer_id,
+      client_id: isClient ? loggedInUser.client_id : formData.client_id,
       session_time: normalizeTime(formData.session_time)
     };
 
@@ -147,19 +147,25 @@ const SessionForm = ({session}) => {
                   <Form.Control type='time' value={formData.session_time} isInvalid={!!errors.session_time} onChange={(e) => handleInputChange(e, 'session_time')}></Form.Control>
                   <Form.Control.Feedback type='invalid'>{errors.session_time}</Form.Control.Feedback>
                 </Form.Group>
+                
+                {isClient && (
+                  <Form.Group as={Col} lg={6} className='pb-2'>
+                    <Form.Label>Client</Form.Label>
+                    <Form.Control type="text" value={loggedInUser.email} readOnly/>
+                  </Form.Group>
+                )}
 
-                <Form.Group as={Col} lg={6} className='pb-2'>
-                <Form.Label>Client</Form.Label>
-                  <Form.Select value={formData.client_id} isInvalid={!!errors.client_id} disabled>
-                    <option value=''>Select Client</option>
-                    {isClient ? (
-                      <option value={loggedInUser.client_id}>{loggedInUser.email}</option>
-                    ) : (
-                      clients.map(client => (<option key={client.id} value={client.id}>{client.name}</option>))
-                    )}
-                  </Form.Select>
-                  <Form.Control.Feedback type='invalid'>{errors.client_id}</Form.Control.Feedback>
-                </Form.Group>
+                {isTrainer && (
+                  <Form.Group as={Col} lg={6} className='pb-2'>
+                    <Form.Label>Client</Form.Label>
+                    <Form.Select value={formData.client_id} isInvalid={!!errors.client_id} onChange={(e) => handleInputChange(e, 'client_id')}>
+                      <option value=''>Select Client</option>
+                      {clients.map(client => (
+                        <option key={client.id} value={client.id}>{client.name}</option>))}
+                    </Form.Select>
+                    <Form.Control.Feedback type='invalid'>{errors.client_id}</Form.Control.Feedback>
+                  </Form.Group>
+                )}
 
                 <Form.Group as={Col} lg={6} className='pb-2'>
                   <Form.Label>Trainer</Form.Label>

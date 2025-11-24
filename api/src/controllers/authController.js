@@ -11,14 +11,14 @@ async function googleLogin(req, res) {
 
   try {
     const googleUser = await verifyGoogleToken(idToken);
-    const userQuery = await pgClient.query('SELECT id, email, role FROM user_accounts WHERE email = $1', [googleUser.email]);
+    const userQuery = await pgClient.query('SELECT id, email, role, client_id, trainer_id FROM user_accounts WHERE email = $1', [googleUser.email]);
 
     if (userQuery.rowCount === 0) {
       return res.redirect('http://localhost:3000?error=notfound');
     }
 
     const currentUser = userQuery.rows[0];
-    const token = jwt.sign({id: currentUser.id, email: currentUser.email, role: currentUser.role}, process.env.JWT_SECRET, {expiresIn: '2d'});
+    const token = jwt.sign({id: currentUser.id, email: currentUser.email, role: currentUser.role, client_id: currentUser.client_id, trainer_id: currentUser.trainer_id}, process.env.JWT_SECRET, {expiresIn: '2d'});
     res.cookie('jwt', token, {httpOnly: true, sameSite: 'Lax', secure: false});
     res.redirect('http://localhost:3000');
   } catch (err) {
@@ -44,14 +44,16 @@ function login(req, res) {
     return;
   }
 
-  pgClient.query('SELECT id, email, password, role FROM user_accounts WHERE email = $1 AND password = crypt($2, password)', [email, password])
+  pgClient.query('SELECT id, email, password, role, client_id, trainer_id FROM user_accounts WHERE email = $1 AND password = crypt($2, password)', [email, password])
     .then(results => {
       if(results.rowCount > 0) {
-        const token = jwt.sign({id: results.rows[0].id, email: results.rows[0].email, role: results.rows[0].role}, process.env.JWT_SECRET, {expiresIn: '2d'});
+        const token = jwt.sign({id: results.rows[0].id, email: results.rows[0].email, role: results.rows[0].role, client_id: results.rows[0].client_id, trainer_id: results.rows[0].trainer_id}, process.env.JWT_SECRET, {expiresIn: '2d'});
         const payload = {
           id: results.rows[0].id,
           role: results.rows[0].role,
           email: results.rows[0].email,
+          client_id: results.rows[0].client_id,
+          trainer_id: results.rows[0].trainer_id,
           token: token
         };
 
@@ -84,7 +86,9 @@ function verifyToken(req, res) {
     const payload = {
       id: user.id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      client_id: user.client_id,
+      trainer_id: user.trainer_id
     };
 
     res.json({message: 'Token is valid', user: payload});
