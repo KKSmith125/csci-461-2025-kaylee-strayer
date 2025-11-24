@@ -23,6 +23,10 @@ const SessionForm = ({session}) => {
     client_id: '',
     reason_ids: []
   });
+  const normalizeTime = (timeString) => {
+    if (!timeString) return '';
+    return timeString.length === 5 ? `${timeString}:00` : timeString;
+  }
 
   useEffect(() => {
     if (!!session?.id) {
@@ -38,10 +42,10 @@ const SessionForm = ({session}) => {
 
   useEffect(() => {
     if (loggedInUser?.id && loggedInUser.role == 'CLIENT') {
-      setFormData(prev => ({...prev, client_id: loggedInUser.id}));
+      setFormData(prev => ({...prev, client_id: loggedInUser.client_id}));
     }
     if (loggedInUser?.id && loggedInUser.role === 'TRAINER') {
-      setFormData(prev => ({...prev, trainer_id: loggedInUser.id}));
+      setFormData(prev => ({...prev, trainer_id: loggedInUser.trainer_id}));
     }
   }, [loggedInUser]);
 
@@ -80,9 +84,19 @@ const SessionForm = ({session}) => {
     console.log('Submitting formData:', formData);
 
     if (!session?.id && loggedInUser?.id && isTrainer) {
-      formData.trainer_id = loggedInUser.id;
+      setFormData(prev => ({...prev, trainer_id: loggedInUser.id}));
     }
-    const apiCall = !!session?.id ? axios.put(`/api/sessions/${session.id}`, formData) : axios.post('/api/sessions', formData);
+
+    const payload = {
+      ...formData,
+      trainer_id: isTrainer ? loggedInUser.id : formData.trainer_id,
+      client_id: isClient ? loggedInUser.id : formData.client_id,
+      session_time: normalizeTime(formData.session_time)
+    };
+
+    const apiCall = !!session?.id
+      ? axios.put(`/api/sessions/${session.id}`, payload)
+      : axios.post('/api/sessions', payload);
 
     apiCall
       .then(response => {
@@ -139,7 +153,7 @@ const SessionForm = ({session}) => {
                   <Form.Select value={formData.client_id} isInvalid={!!errors.client_id} disabled>
                     <option value=''>Select Client</option>
                     {isClient ? (
-                      <option value={loggedInUser.id}>{loggedInUser.name || loggedInUser.email}</option>
+                      <option value={loggedInUser.client_id}>{loggedInUser.email}</option>
                     ) : (
                       clients.map(client => (<option key={client.id} value={client.id}>{client.name}</option>))
                     )}

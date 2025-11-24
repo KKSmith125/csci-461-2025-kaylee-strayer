@@ -137,9 +137,8 @@ const create = async (req, res) => {
   }
   catch (error) {
     await pgClient.query('ROLLBACK');
-    res.status(500).json({ error: `Error: ${error}.` });
-
-    return
+    console.error('Session creation error:', error);
+    return res.status(500).json({ error: error.message });
   }
 
   res.location(`/sessions/${sessionId}`);

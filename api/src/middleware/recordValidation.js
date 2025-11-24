@@ -52,30 +52,36 @@ const validateSession = async (req, res, next) => {
   session.id = req.params.id;
   const errors = {};
 
+  Object.keys(session).forEach(key => {
+    if(session[key] === "") {session[key] = null};
+  })
+
   if (!session.session_date) {
     errors.session_date = 'is required.'
-  }
-
-  if (isNaN(Date.parse(session.session_date))) {
+  } else if (isNaN(Date.parse(session.session_date))) {
     errors.session_date = 'must be in valid date format.'
   }
 
-  if (!session.trainer_id || session.trainer_id.length === 0) {
+  if (!session.trainer_id) {
     errors.trainer_id = 'is required.';
   }
 
-  if (!session.client_id || session.client_id.length === 0) {
+  if (!session.client_id) {
     errors.client_id = 'is required.';
   }
 
   session.reason_ids = session.reason_ids.filter(id => !isNaN(id));
-  if (!session.reason_ids || session.reason_ids === 0) {
+  
+  if (!session.reason_ids || session.reason_ids.length === 0) {
     errors.reason_ids = 'at least one reason is required.'
   }
 
+  if (Object.keys(errors).length > 0) {
+    return res.status(422).json({errors});
+  }
   try {
-    const conflictQuery = 'SELECT id FROM sessions WHERE trainer_id = $1 AND session_date = $2 AND session_time = $3 AND id != COALESCE($4, 1)';
-    const conflictParams = [session.trainer_id, session.session_date, session.session_time, session.id || null];
+    const conflictQuery = 'SELECT id FROM sessions WHERE trainer_id = $1 AND session_date = $2 AND session_time = $3 AND id = $4';
+    const conflictParams = [session.trainer_id, session.session_date, session.session_time, session.id || 0];
 
     const result = await pgClient.query(conflictQuery, conflictParams);
     
@@ -85,11 +91,11 @@ const validateSession = async (req, res, next) => {
   }
   catch (error) {
     console.error('Session validation error: ', error);
-    res.status(500).json({error: 'Server error validating session.'});
+    return res.status(500).json({error: 'Server error validating session.'});
   }
 
   if(Object.keys(errors).length > 0) {
-    res.status(422).json({errors});
+    return res.status(422).json({errors});
   }
   else {
     next();
