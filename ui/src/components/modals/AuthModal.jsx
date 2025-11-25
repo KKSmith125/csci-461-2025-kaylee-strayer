@@ -37,6 +37,7 @@ function AuthModal({show, setShow, authAction, setAuthAction}) {
   function handleGoogleCallback(response) {
     axios.post('/api/auth/google-login', {credential: response.credential}, {withCredentials: true})
       .then(res => {
+        console.log(res.data.user);
         dispatch(authenticate(res.data.user));
         resetForm();
         setShow(false);

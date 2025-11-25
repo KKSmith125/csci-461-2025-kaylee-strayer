@@ -5,6 +5,11 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  next();
+})
+
 const cors = require('cors');
 app.use(cors({origin: 'http://localhost:3000', credentials: true}));
 

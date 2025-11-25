@@ -6,7 +6,7 @@ async function googleLogin(req, res) {
   const idToken = req.body.credential;
 
   if (!idToken) {
-    return res.redirect('http://localhost:3000?error=notoken');
+    return res.status(400).json({error: 'No Google token found.'});
   }
 
   try {
@@ -14,16 +14,16 @@ async function googleLogin(req, res) {
     const userQuery = await pgClient.query('SELECT id, email, role, client_id, trainer_id FROM user_accounts WHERE email = $1', [googleUser.email]);
     
     if (userQuery.rowCount === 0) {
-      return res.redirect('http://localhost:3000?error=notfound');
+      return res.status(404).json({error: 'User not found.'});
     }
 
     const currentUser = userQuery.rows[0];
     const token = jwt.sign({id: currentUser.id, email: currentUser.email, role: currentUser.role, client_id: currentUser.client_id, trainer_id: currentUser.trainer_id}, process.env.JWT_SECRET, {expiresIn: '2d'});
     res.cookie('jwt', token, {httpOnly: true, sameSite: 'Lax', secure: false});
-    res.redirect('http://localhost:3000');
+    res.json({user: currentUser, token});
   } catch (err) {
     console.error(err);
-    res.redirect('http://localhost:3000?error=google');
+    res.status(401).json({error: 'Invalid Google token.'});
   }
 }
 
