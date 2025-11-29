@@ -11,7 +11,7 @@ async function authenticate(req, res, next) {
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
      
-  const query = await pgClient.query('SELECT id, email, role FROM user_accounts WHERE id = $1', [decoded.id])
+  const query = await pgClient.query('SELECT id, email, role, client_id, trainer_id FROM user_accounts WHERE id = $1', [decoded.id])
   
   if (query.rowCount === 0) {
     return res.status(404).json({error: 'That user hasn\'t been registered yet.'});

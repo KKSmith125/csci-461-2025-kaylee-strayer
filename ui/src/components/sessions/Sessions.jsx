@@ -1,12 +1,11 @@
-import {useLocation} from 'react-router-dom';
+import {useLocation, Link} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {Container, Spinner, Alert, Modal, Button} from 'react-bootstrap';
 import {Calendar, momentLocalizer} from 'react-big-calendar';
-import {Link} from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const localizer = momentLocalizer(moment);
 

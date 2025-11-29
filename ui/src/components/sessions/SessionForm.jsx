@@ -133,7 +133,7 @@ const SessionForm = ({session}) => {
         {isLoading && <center><Spinner animation='border'></Spinner></center>}
 
         <Row>
-          <Container as={Col} xs={7} className='bg-light text-black rounded p-2'>
+          <Container as={Col} xs={7} className='bg-secondary text-black rounded p-2'>
             <Form className='p-2'>
               <Row>
                 <Form.Group className='pb-2'>

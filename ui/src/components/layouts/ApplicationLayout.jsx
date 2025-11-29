@@ -13,6 +13,8 @@ function ApplicationLayout({}) {
   const auth = useSelector(state => state.auth);
   const [authAction, setAuthAction] = useState('');
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const loggedInUser = useSelector(state => state.auth.user);
+  const isTrainer = loggedInUser?.role === 'TRAINER';
   
   useEffect(() => {
     const verifyUser = async () => {
@@ -74,7 +76,7 @@ function ApplicationLayout({}) {
             <Nav.Link as={NavLink} to='/Weightlifting'>General Weightlifting</Nav.Link>
             <Nav.Link as={NavLink} to='/Cardio'>General Cardio</Nav.Link>
             <Nav.Link as={NavLink} to='/TrainerTrove'>Trainers</Nav.Link>
-            {auth?.isAuthenticated ? <Nav.Link as={NavLink} to='/Sessions'>Sessions</Nav.Link> : <></>}
+            {auth?.isAuthenticated && isTrainer ? <Nav.Link as={NavLink} to='/Sessions'>Sessions</Nav.Link> : <></>}
           </Nav>
 
           <Nav className='justify-content-end'>

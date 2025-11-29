@@ -89,7 +89,7 @@ function Scheduling () {
       {/* Scheduling Buttons */}
       <div className='text-center mt-4'>
         <Link to='/sessions/new'>
-          <Button className='m-2 fw-bold' variant='light' size='lg'>Schedule a Session!</Button>
+          <Button className='m-2 fw-bold' variant='outline-light' size='lg'>Schedule a Session!</Button>
         </Link>
         <Link to='/clients/new'>
           <Button className='m-2 fw-bold' variant='outline-light' size='lg'>Sign Up As A Client!</Button>
