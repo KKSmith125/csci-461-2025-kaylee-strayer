@@ -28,7 +28,7 @@ function EditSession() {
 
   return (
     <>
-      <h3>Edit Session</h3>
+      <h3 className='text-center text-white pb-2'>Edit Session</h3>
 
       {!!alert.message && <Alert className='text-center' variant={alert.variant} onClose={() => setAlert({message: '', variant: ''})} dismissible>{alert.message}</Alert>}
 

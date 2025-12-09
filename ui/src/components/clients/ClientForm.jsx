@@ -46,11 +46,11 @@ const ClientForm = ({client}) => {
       }
 
       <Row>
-        <Container as={Col} xs={7} className='bg-light text-back rounded p-2'>
+        <Container as={Col} xs={7} className='bg-secondary text-back rounded p-2'>
           <Form onSubmit={handleSubmit}>
             <Form.Group>
-              <Form.Label>Name</Form.Label>
-              <Form.Control type='text' placeholder='Enter name' value={formData.name} onChange={(e) => handleChange(e, 'name')} isInvalid={!!errors.name}/>
+              <Form.Label>Email</Form.Label>
+              <Form.Control type='text' placeholder='Enter email' value={formData.name} onChange={(e) => handleChange(e, 'name')} isInvalid={!!errors.name}/>
               <Form.Control.Feedback type='invalid'>{errors.name}</Form.Control.Feedback>
             </Form.Group>
 

@@ -3,7 +3,7 @@ import ClientForm from './ClientForm';
 const NewClient = () => {
   return (
     <>
-      <h3 className='pb-3'>New Client</h3>
+      <h3 className='text-center text-white pb-2'>New Client</h3>
       <ClientForm />
     </>
   );
